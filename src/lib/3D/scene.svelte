@@ -30,7 +30,7 @@
 	});
 
 	$effect(() => {
-		console.log(origin.origin);
+		// console.log(origin.origin);
 		targetTween.target = origin.origin;
 	});
 

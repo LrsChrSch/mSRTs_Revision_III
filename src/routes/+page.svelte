@@ -33,6 +33,10 @@
 	let entered = $state(false);
 </script>
 
+<svelte:head>
+	<title>Fraktal-Formen-Raum</title>
+</svelte:head>
+
 <section
 	class="pointer-events-none absolute inset-0 z-50 {entered
 		? 'bg-transparent'
