@@ -110,9 +110,11 @@
 								delay: 300,
 								easing: cubicOut
 							}}
-							class="pointer-events-auto text-left md:text-right font-display text-2xl bg-zinc-950 md:pl-4 md:mt-4"
+							class="pointer-events-auto text-left md:text-right font-display text-2xl bg-zinc-950 md:pl-4 md:mt-3"
 						>
-							Projekttitel
+							Fraktal-<span class="hidden md:inline"><br /></span>Formen-<span
+								class="hidden md:inline"><br /></span
+							>Raum
 						</h1>
 					{/if}
 				</div>
