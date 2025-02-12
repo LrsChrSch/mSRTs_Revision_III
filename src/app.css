@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+
+@font-face {
+	font-family: 'Nimbus San L';
+	src: url('/fonts/NimbusSanL-Regu.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@theme {
+	--font-display: 'STIX Two Text Variable', 'serif';
+	--font-sans: 'Nimbus San L', 'sans-serif';
+}
+
+* {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+*:focus {
+	@apply outline-none;
+}
+
+button,
+a,
+select,
+option {
+	@apply outline-none focus:ring-1 ring-stone-300;
+}
+
+body {
+	@apply bg-zinc-950 text-stone-300 w-full h-screen font-sans;
+}
+
+main {
+	@apply w-full h-full;
+}
+
+a,
+button {
+	@apply block hover:underline cursor-pointer;
+}
+
+*::selection {
+	@apply bg-stone-300 text-zinc-950;
+}
+
+em {
+	@apply underline text-neutral-500 not-italic;
+}
