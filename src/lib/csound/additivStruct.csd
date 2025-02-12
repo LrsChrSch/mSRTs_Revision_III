@@ -30,10 +30,11 @@ endin
 
 instr additivStructSig
   // get data from browser
-  kPointer = chnget(additivStruct.freqPosition)
-  aPointer = port(kPointer, 0.25)
-  kCutOff = chnget(additivStruct.filtCf)
-  
+  ;; kPointer = chnget(additivStruct.freqPosition)
+  ;; aPointer = port(kPointer, 0.25)
+  ;; kCutOff = chnget(additivStruct.filtCf)
+  aPointer = oscil(0.5, .1)
+  kCutOff = 300
   // freq table
   iFreqFt = ftgen(0, 0, 1024, -7, p5, 1024, p6)
   ;;  aPointer = ((oscil:a(1, 0.1) + 1) * 0.5)
