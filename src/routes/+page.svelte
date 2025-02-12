@@ -89,7 +89,14 @@
 
 	<div class="absolute inset-0 p-4 md:p-8 flex flex-col overflow-y-hidden gap-4 z-10">
 		<nav class="flex justify-between gap-4">
-			<a class="pointer-events-auto" href="https://lrs-chr-sch.de">lrs-chr-sch</a>
+			<div class="flex gap-4">
+				<!-- Hinweis: Ich hab mich nicht selbst erst genannt, weil ich assozial bin, sondern weil die Seite vermutlich von meinem Server gehostet wird (?) Hoffe das ist okay so :) -->
+				<a class="pointer-events-auto" target="_blank" href="https://lrs-chr-sch.de">lrs-chr-sch</a>
+				<p>+</p>
+				<a class="pointer-events-auto" target="_blank" href="https://www.von-neumann.com/">
+					von-neumann
+				</a>
+			</div>
 			<button
 				class="text-right pointer-events-auto"
 				onclick={() => {
