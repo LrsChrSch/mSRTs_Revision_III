@@ -4,6 +4,8 @@
 
 import { Csound, type CsoundObj } from "@csound/browser";
 import csd from '$lib/csound/main.csd?raw'
+import helper from '$lib/csound/helper.udo?raw'
+import additivStruct from '$lib/csound/additivStruct.csd?raw'
 
 let csound: CsoundObj | null | undefined = null;
 
@@ -15,7 +17,7 @@ function createSoundPauseStore() {
         get paused() { return paused },
         toggle: () => {
             paused = !paused
-            console.log(paused)
+            // console.log(paused)
             if (csound) {
                 if (paused) {
                     csound.pause();
@@ -38,7 +40,13 @@ export async function startSound() {
 
     await csound.setOption("-m0");
 
+    const encoder = new TextEncoder();
+    const helperBinary = encoder.encode(helper);
+    await csound.fs.writeFile("helper.udo", helperBinary);
+    const additivStructBinary = encoder.encode(additivStruct);
+    await csound.fs.writeFile("additivStruct.csd", additivStructBinary);
     await csound.compileCsdText(csd);
+
 
     if (soundPaused.paused) {
         csound.pause();
@@ -53,7 +61,6 @@ export async function flourish() {
 
 export async function volumeControl(volume: number) {
     if (!csound) return;
-    console.log(volume)
     await csound.setControlChannel('main.note.amp', volume)
 }
 
