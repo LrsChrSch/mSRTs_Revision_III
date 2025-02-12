@@ -47,6 +47,11 @@
 
 			cursorX = mouseX;
 			cursorY = mouseY;
+
+			if (module) {
+				module.additivStructFreqPosition(mouseX);
+				module.additivStructFiltCf(mouseY);
+			}
 		});
 	});
 
@@ -60,7 +65,7 @@
 			// map and clamp the distance from a range of 0 to 10 to a range of -90 to -3
 			const newGain = THREE.MathUtils.mapLinear(distanceToOrigin, 0, 10, -3, -24);
 
-			if (module) module.volumeControl(newGain);
+			// if (module) module.volumeControl(newGain);
 
 			const screenSpacePosition = new THREE.Vector2(cursorX, cursorY); // Example screen space coordinate (center of the screen)
 			const ndc = new THREE.Vector3(
