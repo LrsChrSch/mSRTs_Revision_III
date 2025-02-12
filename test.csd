@@ -4,7 +4,7 @@
 </CsOptions>
 <CsInstruments>
 sr = 44100
-ksmps = 64
+ksmps = 6
 nchnls = 2
 0dbfs = 1.0
 
@@ -17,7 +17,7 @@ instr Main
   // input data from website
   kAmp chnget "main.note.amp"
   kAmp = port(kAmp, 0.5)
-
+  
   kTone = 0.5
   kBrite = 0.5
 

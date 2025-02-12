@@ -3,7 +3,7 @@
 // functions like volume control and events are defined here and get executed from other modules
 
 import { Csound, type CsoundObj } from "@csound/browser";
-import csd from '$lib/sound/test.csd?raw'
+import csd from '$lib/csound/main.csd?raw'
 
 let csound: CsoundObj | null | undefined = null;
 

@@ -6,6 +6,9 @@
 - Texte überarbeiten (Lars)
 - Website Titel / Meta Description, etc. (Lars)
 
+### Implementieren
+- `additivStruct.freqPosition` könnte auf die X-Achse der Maus (0 - 1)
+- `additivStruct.filtCf` könnte auf die Y-Achse der Maus (0 - 1)
 
 ## Parameterliste
 
