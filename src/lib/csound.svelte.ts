@@ -62,10 +62,10 @@ export async function flourish() {
     await csound.evalCode(`schedule("Flourish", next_time(.25), 0, 0)`)
 }
 
-// export async function additivStructFreqPosition(value: number) {
-//     if (!csound) return;
-//     await csound.setControlChannel('additivStruct.freqPosition', value)
-// }
+export async function additivStructFreqPosition(value: number) {
+    if (!csound) return;
+    await csound.setControlChannel('additivStruct.freqPosition', value)
+}
 
 export async function additivStructFiltCf(value: number) {
     if (!csound) return;

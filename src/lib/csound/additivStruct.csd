@@ -51,7 +51,7 @@ instr additivStructSig
   aSig *= aEnv
 
   // filter
-  aSig = butterlp(aSig, 100 + (kCutOff * 5000))
+  aSig = butterlp(aSig, 60 + ((1 - kCutOff) * 200))
   
   // panning
   aOut1, aOut2 pan2 aSig, random:i(0,1) 

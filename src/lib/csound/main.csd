@@ -18,8 +18,8 @@ gaReverbBus[] init 2
 
 instr getDataFromBrowser
   gkAdditivStructFiltCf = chnget:k("additivStruct.filtCf")
-  printks("Filter: %f\n", 2, gkAdditivStructFiltCf)
-;;  gkAdditivStructFiltCf = port(gkAdditivStructFiltCf, 0.25)
+;;  printks("Filter: %f\n", 2, gkAdditivStructFiltCf)
+  gkAdditivStructFiltCf = port(gkAdditivStructFiltCf, 0.25)
 endin
 schedule("getDataFromBrowser", 0, giGlobalTime)
 
