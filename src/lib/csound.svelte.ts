@@ -6,10 +6,6 @@ import { Csound, type CsoundObj } from "@csound/browser";
 import csd from '$lib/csound/main.csd?raw'
 import helper from '$lib/csound/helper.udo?raw'
 import additivStruct from '$lib/csound/additivStruct.csd?raw'
-import additiv_struct from "$lib/csound/additiv_struct.csd?raw";
-import additiv_noise from "$lib/csound/additiv_noise.csd?raw";
-import test from "$lib/csound/test.csd?raw";
-import testHelper from "$lib/csound/testHelper.udo?raw";
 
 let csound: CsoundObj | null | undefined = null;
 
@@ -40,26 +36,19 @@ export async function startSound() {
     if (csound) return;
     csound = await Csound();
     if (!csound) return;
-    // console.log(csound)
+	//    console.log(csound)
 
     await csound.setOption("-m0");
 
-
-
     const encoder = new TextEncoder();
-    // const helperBinary = encoder.encode(helper);
-    // await csound.fs.writeFile("helper.udo", helperBinary);
-    // const additivStructBinary = encoder.encode(additivStruct);
-    // await csound.fs.writeFile("additivStruct.csd", additivStructBinary);
-    // const additiv_structBinary = encoder.encode(additiv_struct);
-    // await csound.fs.writeFile("additiv_struct.csd", additiv_structBinary);
-    // const additiv_noiseBinary = encoder.encode(additiv_noise);
-    // await csound.fs.writeFile("additiv_noise.csd", additiv_noiseBinary);
-    const testHelperBinary = encoder.encode(testHelper);
-    await csound.fs.writeFile("testHelper.udo", testHelperBinary);
+    const helperBinary = encoder.encode(helper);
+    await csound.fs.writeFile("helper.udo", helperBinary);
+    const additivStructBinary = encoder.encode(additivStruct);
+    await csound.fs.writeFile("additivStruct.csd", additivStructBinary);
+
     const filePaths = await csound.fs.readdir("/");
     console.log(filePaths)
-    await csound.compileCsdText(test);
+    await csound.compileCsdText(csd);
 
 
     if (soundPaused.paused) {
@@ -73,10 +62,10 @@ export async function flourish() {
     await csound.evalCode(`schedule("Flourish", next_time(.25), 0, 0)`)
 }
 
-export async function additivStructFreqPosition(value: number) {
-    if (!csound) return;
-    await csound.setControlChannel('additivStruct.freqPosition', value)
-}
+// export async function additivStructFreqPosition(value: number) {
+//     if (!csound) return;
+//     await csound.setControlChannel('additivStruct.freqPosition', value)
+// }
 
 export async function additivStructFiltCf(value: number) {
     if (!csound) return;

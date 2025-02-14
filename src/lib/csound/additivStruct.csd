@@ -32,12 +32,12 @@ instr additivStructSig
   // get data from browser
   ;; kPointer = chnget(additivStruct.freqPosition)
   ;; aPointer = port(kPointer, 0.25)
-  ;; kCutOff = chnget(additivStruct.filtCf)
-  aPointer = oscil(0.5, .1)
-  kCutOff = 300
+  kCutOff = gkAdditivStructFiltCf
+;;  kCutOff = 1 
+
   // freq table
   iFreqFt = ftgen(0, 0, 1024, -7, p5, 1024, p6)
-  ;;  aPointer = ((oscil:a(1, 0.1) + 1) * 0.5)
+  aPointer = line(0, p3, 1)
   aFreq = tablei:a(aPointer, iFreqFt, 1)
   
   // signal
@@ -51,7 +51,7 @@ instr additivStructSig
   aSig *= aEnv
 
   // filter
-  aSig = butlp(aSig, 80 + (kCutOff * 300))
+  aSig = butterlp(aSig, 100 + (kCutOff * 5000))
   
   // panning
   aOut1, aOut2 pan2 aSig, random:i(0,1) 
