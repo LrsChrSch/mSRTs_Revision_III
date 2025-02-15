@@ -12,7 +12,8 @@ nchnls = 2
 
 #include "./helper.udo"
 
-giGlobalTime = 10000
+giGlobalTime = 1500
+gaMasterBus[] init 2
 gaReverbBus[] init 2
 
 
@@ -43,10 +44,36 @@ instr reverbBus
   kFco = sr/4
   aRev1, aRev2 reverbsc aRevIn1, aRevIn2, kFdbk, kFco
 
-  // output
-  outs(aRev1, aRev2) 
+  // send to master
+  gaMasterBus[0] = gaMasterBus[0] + aRev1
+  gaMasterBus[1] = gaMasterBus[1] + aRev2
 endin
 schedule("reverbBus", 0, giGlobalTime)
+
+instr masterBus
+  // master bus in
+  aMasterIn1 = gaMasterBus[0]
+  aMasterIn2 = gaMasterBus[1]
+
+  // compressor
+  aCmpIn1 = aMasterIn1
+  aCmpIn2 = aMasterIn2
+  kLoKnee = -12
+  kHiKnee = -6
+  kRatio = 4
+  aCmpOut1 = compress2(aCmpIn1, aCmpIn1, -90, kLoKnee, kHiKnee,  \
+    kRatio, 0.01, 0.1,  0.05) 
+  aCmpOut2 = compress2(aCmpIn2, aCmpIn2, -90, kLoKnee, kHiKnee,  \
+    kRatio, 0.01, 0.1,  0.05)
+
+  // limiter
+  aLimited1 = limit(aCmpOut1, -1, 1)
+  aLimited2 = limit(aCmpOut2, -1, 1)
+
+  // output
+  outs(aLimited1, aLimited2)
+endin
+schedule("masterBus", 0, giGlobalTime)
 </CsInstruments>
 <CsScore>
 </CsScore>

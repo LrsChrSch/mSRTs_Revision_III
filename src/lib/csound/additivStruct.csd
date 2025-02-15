@@ -60,6 +60,7 @@ instr additivStructSig
   gaReverbBus[0] = gaReverbBus[0] + (aOut1 * 0.5)
   gaReverbBus[1] = gaReverbBus[1] + (aOut2 * 0.5)
   
-  // output 
-  outs aOut1, aOut2
+  // send to master
+  gaMasterBus[0] = gaMasterBus[0] + aOut1
+  gaMasterBus[1] = gaMasterBus[1] + aOut2
 endin
