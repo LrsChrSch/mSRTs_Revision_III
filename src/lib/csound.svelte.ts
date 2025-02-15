@@ -42,7 +42,7 @@ class SoundAdapter {
 
         // console.log(csound)
 
-        await csound?.setOption("-m0");
+        // await csound?.setOption("-m0");
 
         const encoder = new TextEncoder();
         const helperBinary = encoder.encode(helper);
@@ -66,10 +66,12 @@ class SoundAdapter {
     }
 
     async additivStructFreqPosition(value: number) {
+        // console.log(value)
         await csound?.setControlChannel('additivStruct.freqPosition', value);
     }
 
     async additivStructFiltCf(value: number) {
+        // console.log(value)
         await csound?.setControlChannel('additivStruct.filtCf', value);
     }
 
