@@ -40,7 +40,7 @@ class SoundAdapter {
 
         if (this.csound) return;
 
-        this.csound = await Csound({ useWorker: true, inputChannelCount: 0 }); // useWorker, so it runs in a separate thread, inputChannelCount: 0, so it doesn't expect any input
+        this.csound = await Csound({ useWorker: true, }); // useWorker, so it runs in a separate thread, inputChannelCount: 0, so it doesn't expect any input
 
         // console.log(csound)
 
@@ -51,10 +51,10 @@ class SoundAdapter {
         await this.csound?.fs.writeFile("helper.udo", helperBinary);
         const additivStructBinary = encoder.encode(additivStruct);
         await this.csound?.fs.writeFile("additivStruct.csd", additivStructBinary);
-		const subBeatingsBinary = encoder.encode(subBeatings);
+        const subBeatingsBinary = encoder.encode(subBeatings);
         await this.csound?.fs.writeFile("subBeatings.csd", subBeatingsBinary);
 
-		
+
         const filePaths = await this.csound?.fs.readdir("/");
         console.log("Csound File System:", filePaths);
         await this.csound?.compileCsdText(csd);
@@ -70,14 +70,24 @@ class SoundAdapter {
 
     }
 
-    async additivStructFreqPosition(value: number) {
-        // console.log(value)
+    async cursorPosXHandler(value: number) {
+        // value is a number between 0 and 1 (left-right screen position)
         await this.csound?.setControlChannel('additivStruct.freqPosition', value);
     }
 
-    async additivStructFiltCf(value: number) {
-        // console.log(value)
+    async cursorPosYHandler(value: number) {
+        // value is a number between 0 and 1 (top-bottom screen position)
         await this.csound?.setControlChannel('additivStruct.filtCf', value);
+    }
+
+    async surroundingClickInteraction() {
+        console.log("surrounding click interaction"); // for debugging
+        // this gets called when the user clicks on one of the image cards around the origin
+        // TODO: implement sound here
+        // Example: 
+        // await this.csound?.evalCode(`
+        //   schedule("Flourish", next_time(.25), 0, 0)
+        // `)
     }
 
     async disposeSound() {

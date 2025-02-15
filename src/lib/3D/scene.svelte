@@ -43,8 +43,8 @@
 			cursorX = mouseX;
 			cursorY = mouseY;
 
-			soundAdapter.additivStructFreqPosition(mouseX);
-			soundAdapter.additivStructFiltCf(mouseY);
+			soundAdapter.cursorPosXHandler(mouseX);
+			soundAdapter.cursorPosYHandler(mouseY);
 		});
 	});
 

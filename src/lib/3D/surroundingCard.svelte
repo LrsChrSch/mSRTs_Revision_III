@@ -18,6 +18,7 @@
 	import { cubicInOut } from 'svelte/easing';
 	import { writable } from 'svelte/store';
 	import { interactions, pointData } from './pointData.svelte';
+	import { soundAdapter } from '$lib/csound.svelte';
 
 	const { animationIndex, index, position, type, text } = $props();
 
@@ -95,6 +96,8 @@
 			lineSlicer.set(0, {
 				delay: 500
 			});
+
+			soundAdapter.surroundingClickInteraction();
 
 			setTimeout(() => {
 				sculptureIndex.set(index);
