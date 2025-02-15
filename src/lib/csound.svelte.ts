@@ -34,9 +34,9 @@ export const soundPaused = createSoundPauseStore()
 
 export async function startSound() {
     if (csound) return;
-    csound = await Csound();
+    csound = await Csound({ useWorker: true });
     if (!csound) return;
-	//    console.log(csound)
+    //    console.log(csound)
 
     await csound.setOption("-m0");
 
