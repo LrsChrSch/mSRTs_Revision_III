@@ -3,7 +3,7 @@ instr subBeatings
   kBeatings = chnget:k("additivStruct.freqPosition")
   kBeatings = port(kBeatings, 0.25)
   kBeatings = (abs(kBeatings - 0.5) * 10 ) + 0.25
-  kAmp = db(-28)
+  kAmp = db(-32)
   kFreq = giRoot 
   kFreq1 = kFreq + (kBeatings / 2)
   kFreq2 = kFreq - (kBeatings / 2)
