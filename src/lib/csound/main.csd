@@ -57,7 +57,8 @@ instr masterBus
   // master bus in
   aMasterIn1 = gaMasterBus[0]
   aMasterIn2 = gaMasterBus[1]
-
+  clear(gaMasterBus)
+  
   // compressor
   aCmpIn1 = aMasterIn1
   aCmpIn2 = aMasterIn2
