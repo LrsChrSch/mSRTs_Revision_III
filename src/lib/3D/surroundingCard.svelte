@@ -16,9 +16,6 @@
 	import { Tween } from 'svelte/motion';
 	import { T } from '@threlte/core';
 	import { cubicInOut } from 'svelte/easing';
-	import { onMount } from 'svelte';
-	import type { CsoundModule } from '$lib/csound.svelte';
-	import { browser } from '$app/environment';
 	import { writable } from 'svelte/store';
 	import { interactions, pointData } from './pointData.svelte';
 
@@ -51,11 +48,6 @@
 		}
 	});
 
-	let module: CsoundModule = $state();
-	onMount(async () => {
-		if (browser) module = await import('$lib/csound.svelte');
-	});
-
 	$effect(() => {
 		if (origin.origin) size.target = 0;
 		if (invalidateSurrounding.get) size.target = 0;
@@ -86,7 +78,6 @@
 		) => {
 			e.stopPropagation();
 			if (type !== 'image') return;
-			if (module) module.flourish();
 
 			const newOrigin: [x: number, y: number, z: number] = [
 				e.eventObject.position.x + origin.origin[0],

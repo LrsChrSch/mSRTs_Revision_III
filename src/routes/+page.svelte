@@ -10,24 +10,15 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { blur, draw, fly } from 'svelte/transition';
 	import { browser } from '$app/environment';
-
-	import type { CsoundModule } from '$lib/csound.svelte';
+	import { soundAdapter } from '$lib/csound.svelte';
 
 	const loadingProgress = new Tween(0, {
 		duration: 1,
 		easing: circInOut
 	});
 
-	let module: CsoundModule = $state();
-
-	onMount(async () => {
-		loadingProgress.target = 100;
-
-		if (browser) module = await import('$lib/csound.svelte');
-	});
-
 	onDestroy(() => {
-		module?.disposeSound();
+		soundAdapter.disposeSound();
 	});
 
 	let entered = $state(false);
@@ -104,8 +95,8 @@
 			<button
 				class="text-right pointer-events-auto"
 				onclick={() => {
-					module?.soundPaused?.toggle();
-				}}>[{module?.soundPaused?.paused ? 'off' : 'on'}] Sound</button
+					soundAdapter.toggleSound();
+				}}>[{soundAdapter.soundPaused ? 'off' : 'on'}] Sound</button
 			>
 		</nav>
 		<div class="flex-1 flex items-start md:justify-center md:items-center z-20">
@@ -143,7 +134,7 @@
 						<button
 							onclick={() => {
 								entered = true;
-								if (module?.startSound) module?.startSound();
+								soundAdapter.startSound();
 							}}
 							class="border-neutral-700 border overflow-clip w-full aspect-square md:aspect-[4/5] h-auto relative pointer-events-auto"
 						>

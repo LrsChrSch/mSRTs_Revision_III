@@ -10,16 +10,9 @@
 	import { cubicInOut } from 'svelte/easing';
 	import * as THREE from 'three';
 	import NameLine from './nameLine.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Sculpture from './sculpture.svelte';
-	import type { CsoundModule } from '$lib/csound.svelte';
-	import { browser } from '$app/environment';
-
-	let module: CsoundModule = $state();
-
-	onMount(async () => {
-		if (browser) module = await import('$lib/csound.svelte');
-	});
+	import { soundAdapter } from '$lib/csound.svelte';
 
 	interactivity();
 
@@ -40,7 +33,9 @@
 
 	let cursorX = $state(0.5);
 	let cursorY = $state(0.5);
-	onMount(() => {
+	onMount(async () => {
+		await soundAdapter.prepareSound();
+
 		window.addEventListener('mousemove', (e) => {
 			const mouseX = e.clientX / window.innerWidth;
 			const mouseY = e.clientY / window.innerHeight;
@@ -48,11 +43,13 @@
 			cursorX = mouseX;
 			cursorY = mouseY;
 
-			if (module) {
-				module.additivStructFreqPosition(mouseX);
-				module.additivStructFiltCf(mouseY);
-			}
+			soundAdapter.additivStructFreqPosition(mouseX);
+			soundAdapter.additivStructFiltCf(mouseY);
 		});
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('mousemove', () => {});
 	});
 
 	useTask(() => {
