@@ -6,6 +6,7 @@ import { browser } from "$app/environment";
 import csd from '$lib/csound/main.csd?raw'
 import helper from '$lib/csound/helper.udo?raw'
 import additivStruct from '$lib/csound/additivStruct.csd?raw'
+import subBeatings from '$lib/csound/subBeatings.csd?raw'
 import type { CsoundObj } from "@csound/browser";
 let Csound: typeof import("@csound/browser").Csound;
 
@@ -50,7 +51,10 @@ class SoundAdapter {
         await this.csound?.fs.writeFile("helper.udo", helperBinary);
         const additivStructBinary = encoder.encode(additivStruct);
         await this.csound?.fs.writeFile("additivStruct.csd", additivStructBinary);
+		const subBeatingsBinary = encoder.encode(subBeatings);
+        await this.csound?.fs.writeFile("subBeatings.csd", subBeatingsBinary);
 
+		
         const filePaths = await this.csound?.fs.readdir("/");
         console.log("Csound File System:", filePaths);
         await this.csound?.compileCsdText(csd);

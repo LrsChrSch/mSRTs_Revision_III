@@ -12,6 +12,7 @@ nchnls = 2
 
 #include "./helper.udo"
 
+giRoot = 80
 giGlobalTime = 1500
 gaMasterBus[] init 2
 gaReverbBus[] init 2
@@ -27,11 +28,13 @@ schedule("getDataFromBrowser", 0, giGlobalTime)
 
 instr main
   schedule("additivStruct", 0, giGlobalTime)
+  schedule("subBeatings", 0, giGlobalTime)
   turnoff
 endin
 schedule("main", 0, 1)
 
 #include "./additivStruct.csd"
+#include "./subBeatings.csd"
 
 instr reverbBus
   // reverb input
