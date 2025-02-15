@@ -27,6 +27,36 @@
 		targetTween.target = origin.origin;
 	});
 
+	$effect(() => {
+		if (targetTween.current === origin.origin) soundAdapter.transitionFinishedInteraction();
+	});
+
+	$effect(() => {
+		soundAdapter.globalPositionHandler(
+			THREE.MathUtils.mapLinear(
+				THREE.MathUtils.clamp(targetTween.current[0], -100, 100),
+				-100,
+				100,
+				-1,
+				1
+			),
+			THREE.MathUtils.mapLinear(
+				THREE.MathUtils.clamp(targetTween.current[1], -100, 100),
+				-100,
+				100,
+				-1,
+				1
+			),
+			THREE.MathUtils.mapLinear(
+				THREE.MathUtils.clamp(targetTween.current[2], -100, 100),
+				-100,
+				100,
+				-1,
+				1
+			)
+		);
+	});
+
 	let cameraRef: THREE.PerspectiveCamera | undefined = $state();
 
 	let screenPosition: [x: Number, y: Number, z: Number] = $state([0, 0, 0]);
@@ -59,10 +89,7 @@
 				.subVectors(cameraRef.position, new THREE.Vector3(...targetTween.current))
 				.length();
 
-			// map and clamp the distance from a range of 0 to 10 to a range of -90 to -3
-			const newGain = THREE.MathUtils.mapLinear(distanceToOrigin, 0, 10, -3, -24);
-
-			// if (module) module.volumeControl(newGain);
+			soundAdapter.cameraDistanceHandler(THREE.MathUtils.mapLinear(distanceToOrigin, 0, 7, 0, 1));
 
 			const screenSpacePosition = new THREE.Vector2(cursorX, cursorY); // Example screen space coordinate (center of the screen)
 			const ndc = new THREE.Vector3(

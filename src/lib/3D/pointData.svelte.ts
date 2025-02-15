@@ -5,6 +5,7 @@ import texts from '$lib/data/texts.json'
 import bigTexts from '$lib/data/bigTexts.json'
 import { origin, } from './stores.svelte';
 import { createNoise3D } from 'simplex-noise';
+import { soundAdapter } from '$lib/csound.svelte';
 
 
 export const numPoints = 24;
@@ -16,9 +17,14 @@ let noise3D = createNoise3D();
 function createInteractionsStore() {
     let interactions = $state(0)
 
+    soundAdapter.interactionAmountHandler(0)
+
     return {
         get num() { return interactions },
-        add: () => interactions++
+        add: () => {
+            interactions++
+            soundAdapter.interactionAmountHandler(interactions / interactionsClamp)
+        }
     }
 }
 export let interactions = createInteractionsStore()

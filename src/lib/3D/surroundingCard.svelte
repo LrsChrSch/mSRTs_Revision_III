@@ -40,12 +40,14 @@
 		if ($hovering && type === 'image') {
 			opacity.target = 1;
 			onPointerOverCursor.set('pointer');
+			soundAdapter.surroundingHoverInteraction(index);
 		} else if (type === 'bigText' || type === 'text') {
 			opacity.target = 0.75;
 			onPointerOverCursor.set('auto');
 		} else {
 			opacity.target = 0.25;
 			onPointerOverCursor.set('auto');
+			soundAdapter.surroundingHoverInteraction(-1);
 		}
 	});
 
@@ -97,7 +99,7 @@
 				delay: 500
 			});
 
-			soundAdapter.surroundingClickInteraction();
+			soundAdapter.transitionStartedInteraction();
 
 			setTimeout(() => {
 				sculptureIndex.set(index);

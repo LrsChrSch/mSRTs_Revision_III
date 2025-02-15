@@ -7,6 +7,7 @@
 	import { T } from '@threlte/core';
 	import { Tween } from 'svelte/motion';
 	import { cubicInOut } from 'svelte/easing';
+	import { soundAdapter } from '$lib/csound.svelte';
 
 	const { index } = $props();
 
@@ -87,6 +88,7 @@
 			average.divideScalar(total);
 
 			mesh.count = total;
+			soundAdapter.sculptureInstanceAmountHandler(total);
 
 			// set the mesh position to 0,0,0
 			mesh.position.set(0, 0, 0);

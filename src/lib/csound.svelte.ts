@@ -68,6 +68,7 @@ class SoundAdapter {
             await this.csound?.start();
         }
 
+        // you can add some initial sound interaction here, too
     }
 
     async cursorPosXHandler(value: number) {
@@ -80,8 +81,7 @@ class SoundAdapter {
         await this.csound?.setControlChannel('additivStruct.filtCf', value);
     }
 
-    async surroundingClickInteraction() {
-        console.log("surrounding click interaction"); // for debugging
+    async transitionStartedInteraction() {
         // this gets called when the user clicks on one of the image cards around the origin
         // TODO: implement sound here
         // Example: 
@@ -89,6 +89,68 @@ class SoundAdapter {
         //   schedule("Flourish", next_time(.25), 0, 0)
         // `)
     }
+
+    async transitionFinishedInteraction() {
+        // this gets called when the transition to the next sculpture is finished
+        // this also gets called once at the very beginning
+
+    }
+
+    async loadSculptureInteraction(value: number) {
+        // this function handles both the index (value) (0-319) and the data of the sculpture
+        const jsonData = await fetch(`/data/${value}Data.json`).then(async (res) => {
+            return await res.json();
+        });
+
+        // console.log("Sculpture Data", jsonData)
+
+        // jsonData contains the following values:
+        // jsonData.matrixCount (int 3-5)
+        // jsonData.scaleOffset (float 0-1)
+        // jsonData.rotationRange (int 0-1)
+        // jsonData.transformMin (object with x, y, z values)
+        // jsonData.transformMax (object with x, y, z values)
+        // jsonData.seed (int)
+    }
+
+    async cameraDistanceHandler(value: number) {
+        // value is a number between 0 and 1 (distance from the camera to the origin, 1 is the furthest away)
+    }
+
+    async surroundingHoverInteraction(value: number) {
+        // this function gets called when the user hovers over one of the image cards around the origin
+        // index is the sculpture index (0-319). Index is -1 if nothing is hovered
+
+        // console.log(value)
+
+        // just in case you need a boolean value for the hovered state
+        // let hovered = value !== -1;
+    }
+
+    async globalPositionHandler(x: number, y: number, z: number) {
+        // x, y, z are the (animated) origin position values in the global coordinate system, normalized to -1 and 1 (linearly interpolated and clamped from -100 and 100)
+        // this also shows the position on the 3 axis
+        // -x: emergent
+        // +x: constructed
+        // -y: infra
+        // +y: meta
+        // -z: signal
+        // +z: noise
+        // first value is 0,0,0
+
+        // console.log("Global Position", x, y, z)
+    }
+
+    async interactionAmountHandler(value: number) {
+        // value is a number between 0 and 1 (amount of interactions up to the max of 24)
+        // gets initialized with 0 at the start
+    }
+
+    async sculptureInstanceAmountHandler(value: number) {
+        // the value is an integer value around ~200000
+        // it gets called every time a sculpture is loaded (approx. 750ms after an interaction) and reflects the amount of tiny cubes that are visible
+    }
+
 
     async disposeSound() {
         await this.csound?.stop();
