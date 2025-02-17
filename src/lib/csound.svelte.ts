@@ -73,12 +73,12 @@ class SoundAdapter {
 
     async cursorPosXHandler(value: number) {
         // value is a number between 0 and 1 (left-right screen position)
-        await this.csound?.setControlChannel('additivStruct.freqPosition', value);
+        await this.csound?.setControlChannel('cursorPosXHandler', value);
     }
 
     async cursorPosYHandler(value: number) {
         // value is a number between 0 and 1 (top-bottom screen position)
-        await this.csound?.setControlChannel('additivStruct.filtCf', value);
+        await this.csound?.setControlChannel('cursorPosYHandler', value);
     }
 
     async transitionStartedInteraction() {
