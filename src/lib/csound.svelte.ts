@@ -88,6 +88,7 @@ class SoundAdapter {
         // await this.csound?.evalCode(`
         //   schedule("Flourish", next_time(.25), 0, 0)
         // `)
+		await this.csound?.evalCode(`schedule("transitionSound", 0, 2.75)`);
     }
 
     async transitionFinishedInteraction() {

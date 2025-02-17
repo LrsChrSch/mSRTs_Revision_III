@@ -17,6 +17,11 @@ giGlobalTime = 1500
 gaMasterBus[] init 2
 gaReverbBus[] init 2
 
+instr tableData
+  giSine = ftgen(0, 0, 4096, 10, 1)
+  giHanning = ftgen(0, 0, 4096, 20, 2)
+endin
+schedule("tableData", 0, giGlobalTime)
 
 instr getDataFromBrowser
   kCursorPosYHandler = chnget:k("cursorPosYHandler")
@@ -36,6 +41,70 @@ schedule("main", 0, 1)
 
 #include "./additivStruct.csd"
 #include "./subBeatings.csd"
+
+opcode undersine, a, kkkio
+  kFreq, kAmpWeight, kFreqRatio, iNumOfUndertones, iIndex xin
+
+  aSig = poscil(0dbfs / iNumOfUndertones, kFreq)
+
+  if (iIndex < iNumOfUndertones) then
+	aSigNew = undersine(kFreq / kFreqRatio, kFreqRatio, kAmpWeight, iNumOfUndertones, iIndex + 1)
+	aSigNew = (kAmpWeight / sqrt(iIndex+1)) * aSigNew
+	aSig += aSigNew
+  endif
+  
+  xout aSig
+endop
+
+opcode oversine, a, kkkio
+  kFreq, kAmpWeight, kFreqRatio, iNumOfOvertones, iIndex xin
+
+  aSig = poscil(0dbfs / iNumOfOvertones, kFreq)
+
+  if (iIndex < iNumOfOvertones) then
+	aSigNew = oversine(kFreq * kFreqRatio, kFreqRatio, kAmpWeight, iNumOfOvertones, iIndex + 1)
+	aSigNew = (kAmpWeight / sqrt(iIndex+1)) * aSigNew
+	aSig += aSigNew
+  endif
+  
+  xout aSig
+endop
+
+instr transitionSound
+  // sine with undertones
+  kGain = db(-12)
+  kFreq = 12000
+  kAmpWeight = 0.75
+  kBrowserData = i(gkSubBeatings)
+  printk2 kBrowserData
+  kFreqRatio = (3.33 * (kBrowserData - 0.5)) + 0.1
+  printk2 kFreqRatio
+  iNumOfPartials = 5
+  aUnderSine = undersine(kFreq, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
+  aUnderSine *= kGain
+
+  // sine with overtones
+  aOverSine = oversine(giRoot, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
+  aOverSine *= kGain
+  aSum = sum(aUnderSine / 2, aOverSine / 2)
+  
+  // envelope
+  aEnv = transeg(0, 0.01, 5, 1, 2, -2, 0)
+  aSum *= aEnv
+
+  // clip
+  aSum = clip(aSum, 2, db(-4))
+  
+  // hilbert
+  aSig1, aSig2 hilbert aSum
+
+  
+  // send to master
+  gaMasterBus[0] = gaMasterBus[0] + aSig1
+  gaMasterBus[1] = gaMasterBus[1] + aSig2
+endin
+
+
 
 instr reverbBus
   // reverb input
