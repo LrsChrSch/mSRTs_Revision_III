@@ -113,7 +113,7 @@ export const lineSlicer = new Tween(1, {
 
 function createSculptureIndexStore() {
 
-    let index: number = $state(0)
+    let index: number = $state(Math.floor(Math.random() * 320))
 
     return {
         get index() { return index },
