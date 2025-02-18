@@ -12,7 +12,11 @@
 		VignetteEffect,
 		VignetteTechnique,
 		NoiseEffect,
-		BlendFunction
+		BlendFunction,
+		TiltShiftEffect,
+		PixelationEffect,
+		DepthOfFieldEffect,
+		GridEffect
 	} from 'postprocessing';
 	import * as THREE from 'three';
 	import type { Camera } from 'three';
@@ -24,6 +28,16 @@
 	const setupEffectComposer = (camera: Camera) => {
 		composer.removeAllPasses();
 		composer.addPass(new RenderPass(scene, camera));
+
+		composer.addPass(
+			new EffectPass(
+				camera,
+				new TiltShiftEffect({
+					focusArea: 1,
+					feather: 0.5
+				})
+			)
+		);
 
 		composer.addPass(
 			new EffectPass(
@@ -56,6 +70,7 @@
 				})
 			)
 		);
+
 		composer.addPass(
 			new EffectPass(
 				camera,
