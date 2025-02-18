@@ -62,7 +62,7 @@ class SoundAdapter {
 
     async startSound() {
         const csoundContext = await this.csound?.getAudioContext();
-        csoundContext?.resume(); // since the browser blocks the audioContext from starting automatically, we need to resume it here on a use action
+        await csoundContext?.resume(); // since the browser blocks the audioContext from starting automatically, we need to resume it here on a use action
 
         if (!this.soundPaused) { // check if the user has turned the sound off before entering the page
             await this.csound?.start();
@@ -88,7 +88,7 @@ class SoundAdapter {
         // await this.csound?.evalCode(`
         //   schedule("Flourish", next_time(.25), 0, 0)
         // `)
-		await this.csound?.evalCode(`schedule("transitionSound", 0, 2.75)`);
+        await this.csound?.evalCode(`schedule("transitionSound", 0, 2.75)`);
     }
 
     async transitionFinishedInteraction() {
