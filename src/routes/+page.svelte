@@ -122,25 +122,25 @@
 				</div>
 
 				{#if !entered}
-					<div
+					<button
 						out:blur={{
 							duration: 1000,
 							delay: 1250
 						}}
-						class="col-span-3 lg:col-start-4 xl:col-start-6 flex flex-col items-center py-4 md:p-4 z-10 {entered
+						onclick={() => {
+							entered = true;
+							soundAdapter.startSound();
+						}}
+						class="col-span-3 lg:col-start-4 xl:col-start-6 flex flex-col items-center py-4 md:p-4 z-10 pointer-events-auto focus:!ring-0 {entered
 							? 'bg-transparent'
 							: 'bg-zinc-950'} transition-colors duration-500 group"
 					>
-						<button
-							onclick={() => {
-								entered = true;
-								soundAdapter.startSound();
-							}}
-							class="border-neutral-700 border overflow-clip w-full aspect-square md:aspect-[4/5] h-auto relative pointer-events-auto"
+						<div
+							class="border-neutral-700 border overflow-clip w-full aspect-square md:aspect-[4/5] h-auto relative group-focus:ring-1"
 						>
 							<img
-								src="/output10.webp"
-								class="blur-xs w-[512px] h-full object-cover hover:scale-110 transition-transform duration-500 mix-blend-screen contrast-[120%]"
+								src="/vid.webp"
+								class="blur-xs w-[512px] h-full object-cover group-hover:scale-110 transition-transform duration-500 mix-blend-screen contrast-[120%]"
 								alt="preview"
 								loading="lazy"
 							/>
@@ -168,9 +168,9 @@
 
 								<rect width="500%" height="500%" filter="url(#noiseFilter)" />
 							</svg>
-						</button>
+						</div>
 						<p class="mt-2 font-display text-stone-400 group-hover:underline">click to enter</p>
-					</div>
+					</button>
 				{/if}
 				{#if !entered}
 					<div
@@ -181,12 +181,18 @@
 						}}
 						class="col-span-2 md:col-start-6 lg:col-start-7 xl:col-start-9 self-end mb-11 bg-zinc-950 pr-4"
 					>
-						<p class="pointer-events-auto text-sm hyphens-auto">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in
-							hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur,
-							ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum
-							auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh,
-							at maximus ante fermentum sit amet.
+						<p class="pointer-events-auto text-sm space-y-1">
+							What is language? What are symbols? What is the meaning of meaning? If language shapes
+							thought, to what extent does it limit our ability to perceive reality? And in a
+							reality of misinformation, infinite viewpoints and computers being capable of
+							rendering high fidelity graphics anywhere, do our existing symbols even matter? Aren't
+							we ultimately held back by the simplicity of our 2D alphabetic characters?
+						</p>
+						<p class="pointer-events-auto text-sm mt-2">
+							This project allows the exploration of a virtual space trying to answer these
+							questions. Moving through the space from point to point reveals various viewpoints
+							from science, philosophy, fiction and art. Shifting from meaning to intuition. From
+							reading to observing. From the known to the unknown...
 						</p>
 					</div>
 				{/if}
