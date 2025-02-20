@@ -8,9 +8,9 @@
 
 	const lineStart = 0;
 	const lineEnd = 0;
-	const linePadding = 3.5;
-	const wordPos = 3;
-	const textSize = 0.15;
+	const linePadding = 2.75;
+	const wordPos = 2.5;
+	const textSize = 0.1;
 
 	function createSimpleLine(pointA: THREE.Vector3, pointB: THREE.Vector3) {
 		const lineGeometry = new THREE.BufferGeometry().setAttribute(

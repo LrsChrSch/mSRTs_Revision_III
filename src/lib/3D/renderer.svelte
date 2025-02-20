@@ -16,7 +16,10 @@
 		TiltShiftEffect,
 		PixelationEffect,
 		DepthOfFieldEffect,
-		GridEffect
+		GridEffect,
+		BloomEffect,
+		LensDistortionEffect,
+		ShockWaveEffect
 	} from 'postprocessing';
 	import * as THREE from 'three';
 	import type { Camera } from 'three';
@@ -34,7 +37,9 @@
 				camera,
 				new TiltShiftEffect({
 					focusArea: 1,
-					feather: 0.5
+					feather: 0.5,
+					kernelSize: 1,
+					resolutionScale: 1
 				})
 			)
 		);
@@ -43,7 +48,31 @@
 			new EffectPass(
 				camera,
 				new SMAAEffect({
-					preset: SMAAPreset.HIGH
+					preset: SMAAPreset.ULTRA
+				})
+			)
+		);
+
+		composer.addPass(
+			new EffectPass(
+				camera,
+				new LensDistortionEffect({
+					distortion: new THREE.Vector2(0.05, 0.05),
+					principalPoint: new THREE.Vector2(0, 0),
+					focalLength: new THREE.Vector2(0.9, 0.9)
+				})
+			)
+		);
+
+		composer.addPass(
+			new EffectPass(
+				camera,
+				new BloomEffect({
+					blendFunction: BlendFunction.SCREEN,
+					luminanceThreshold: 0.5,
+					mipmapBlur: true,
+					levels: 5,
+					intensity: 0.25
 				})
 			)
 		);

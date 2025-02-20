@@ -11,7 +11,7 @@
 		lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute($linePoints, 3));
 	});
 
-	const material = new THREE.LineBasicMaterial({ color: '#e7e5e4', depthTest: false });
+	const material = new THREE.LineBasicMaterial({ color: '#a6a09b', depthTest: false });
 </script>
 
 <T.Line frustumCulled={false} geometry={lineGeometry} {material} />

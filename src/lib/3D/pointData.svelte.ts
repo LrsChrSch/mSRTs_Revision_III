@@ -2,7 +2,6 @@
 
 
 import texts from '$lib/data/texts.json'
-import bigTexts from '$lib/data/bigTexts.json'
 import { origin, } from './stores.svelte';
 import { createNoise3D } from 'simplex-noise';
 import { soundAdapter } from '$lib/csound.svelte';
@@ -101,32 +100,50 @@ function map(x: number, fromMin: number, fromMax: number, toMin: number, toMax: 
 
 
 function generatePointData() {
-
     usedImgIndeces = [];
 
     // copy the texts and bigTexts arrays so we can modify them
     let textsCopy = texts.slice();
-    let bigTextsCopy = bigTexts.slice();
 
-    noise3D = createNoise3D();
+    // Calculate distance from origin
+    const distanceFromOrigin = Math.sqrt(
+        Math.pow(0 - origin.origin[0], 2) +
+        Math.pow(0 - origin.origin[1], 2) +
+        Math.pow(0 - origin.origin[2], 2)
+    );
+
+    // Determine the chance of being 'none' type
+    let noneChance = 0.1;
+    if (distanceFromOrigin >= 100) {
+        noneChance = Math.min(1, 0.1 * Math.exp((distanceFromOrigin - 100) / 100));
+    }
+
+    console.log('noneChance', noneChance);
 
     // console.log(textsCopy.length, bigTextsCopy.length);
 
-    let pointData = fibonacciSphere(numPoints).map((point) => {
+    let containsImage = false;
 
+    let pointData = fibonacciSphere(numPoints).map((point) => {
         const noiseScale = 15;
-        let noiseValue = noise3D(point[0] * noiseScale, point[1] * noiseScale, point[2] * noiseScale);
+        let noiseValue = noise3D(
+            (point[0] + origin.origin[0]) * noiseScale,
+            (point[1] + origin.origin[1]) * noiseScale,
+            (point[2] + origin.origin[2]) * noiseScale);
         // convert noiseValue from -1-1 to 0-1
         noiseValue = (noiseValue + 1) / 2;
 
+
+
         let type = 'image';
-        if (noiseValue > map(interactions.num, 0, interactionsClamp, 0.66, 0.8, true)) {
-            type = 'bigText';
+        if (noiseValue < noneChance) {
+            type = 'none';
+            console.log("None triggered")
         } else if (noiseValue > map(interactions.num, 0, interactionsClamp, 0.5, 0.7, true)) {
             type = 'text';
         }
 
-
+        if (type === 'image') containsImage = true;
 
         // choose random image without duplication
         let index = 0;
@@ -135,33 +152,34 @@ function generatePointData() {
         } while (usedImgIndeces.includes(index));
         usedImgIndeces.push(index);
 
-
-
-        let text = chooseTexts(type === 'bigText' ? bigTextsCopy : textsCopy);
+        let text = chooseTexts(textsCopy);
         // remove the text from the array so it can't be chosen again
-        if (type === 'bigText') {
-            bigTextsCopy = bigTextsCopy.filter(t => t !== text);
-        } else {
-            textsCopy = textsCopy.filter(t => t !== text);
-        }
+        textsCopy = textsCopy.filter(t => t !== text);
 
         return {
             position: point,
             type: type,
-            text: text.message,
+            text: type === 'none' ? '' : text.message,
             index: index,
         }
-
     });
 
-    // ensure that the first and last point are always images
-    pointData[0].type = 'image';
-    pointData[numPoints - 1].type = 'image';
+    if (!containsImage) {
+        // set all points to text and give them the same text "void"
+        // do not change the index
+        console.log("Reached End")
+        soundAdapter.reachedEndInteraction();
+        pointData = pointData.map(point => {
+            return {
+                ...point,
+                type: 'text',
+                text: 'void',
+            }
+        })
+    }
 
     return pointData;
 }
-
-
 
 
 function createPointDataStore() {

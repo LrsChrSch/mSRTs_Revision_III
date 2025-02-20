@@ -44,7 +44,7 @@ class SoundAdapter {
 
         // console.log(csound)
 
-        // await csound?.setOption("-m0");
+        await this.csound?.setOption("-m0");
 
         const encoder = new TextEncoder();
         const helperBinary = encoder.encode(helper);
@@ -150,6 +150,11 @@ class SoundAdapter {
     async sculptureInstanceAmountHandler(value: number) {
         // the value is an integer value around ~200000
         // it gets called every time a sculpture is loaded (approx. 750ms after an interaction) and reflects the amount of tiny cubes that are visible
+    }
+
+    async reachedEndInteraction() {
+        // this is called if a user has traveled so far (or had bad luck) that no other image cards are visible and they're effectively stuck in the 3D space
+        // the sound could go very crazy or turn off almost completely here.
     }
 
 

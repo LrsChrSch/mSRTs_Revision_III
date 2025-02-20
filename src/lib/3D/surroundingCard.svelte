@@ -36,6 +36,9 @@
 		easing: cubicInOut
 	});
 
+	const textMaxSize = 0.2;
+	const textMinSize = 0.16;
+
 	$effect(() => {
 		if ($hovering && type === 'image') {
 			opacity.target = 1;
@@ -119,37 +122,24 @@
 		position={[position[0] * distance, position[1] * distance, position[2] * distance]}
 		scale={size.current}
 	>
-		{#if type === 'bigText'}
+		{#if type === 'text'}
 			<Text
-				color="#d6d3d1"
-				anchorX="center"
-				anchorY="middle"
-				font="/fonts/STIXTwoText-Italic.ttf"
-				position={[0, 0, 0]}
-				textAlign="center"
-				fontSize={0.4}
-				maxWidth={5}
-				lineHeight={1.25}
-				sdfGlyphSize={64}
-				fillOpacity={0.75}
-				{text}
-			/>
-		{:else if type === 'text'}
-			<Text
-				color="#d6d3d1"
+				color="#737373"
 				anchorX="center"
 				anchorY="middle"
 				font="/fonts/NimbusSanL-Regu.ttf"
 				position={[0, 0, 0]}
 				textAlign="center"
-				fontSize={0.25}
-				maxWidth={5}
+				fontSize={Math.max(
+					textMinSize,
+					Math.min(textMaxSize, textMaxSize - (text.length / 256) * (textMaxSize - textMinSize))
+				)}
+				maxWidth={3.5}
 				lineHeight={1.25}
 				sdfGlyphSize={64}
-				fillOpacity={0.25}
 				{text}
 			/>
-		{:else}
+		{:else if type === 'image'}
 			<T.Mesh>
 				<T.PlaneGeometry args={[7, 7]} />
 				<ImageMaterial opacity={opacity.current} transparent url={`/data/${index}Preview.webp`} />

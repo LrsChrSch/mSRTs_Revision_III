@@ -89,7 +89,7 @@
 				.subVectors(cameraRef.position, new THREE.Vector3(...targetTween.current))
 				.length();
 
-			soundAdapter.cameraDistanceHandler(THREE.MathUtils.mapLinear(distanceToOrigin, 0, 7, 0, 1));
+			soundAdapter.cameraDistanceHandler(THREE.MathUtils.mapLinear(distanceToOrigin, 0, 5, 0, 1));
 
 			const screenSpacePosition = new THREE.Vector2(cursorX, cursorY); // Example screen space coordinate (center of the screen)
 			const ndc = new THREE.Vector3(
@@ -117,14 +117,14 @@
 	makeDefault
 	bind:ref={cameraRef}
 	position={[-5, 2.5, 5]}
-	fov={70}
+	fov={50}
 	near={0.001}
 	far={1000}
 >
 	<OrbitControls
 		enableDamping
 		dampingFactor={0.1}
-		maxDistance={7}
+		maxDistance={5}
 		minDistance={0.05}
 		maxTargetRadius={3}
 		cursor={targetTween.current}
@@ -143,6 +143,9 @@
 
 <T.Group position={targetTween.current}>
 	<T.PointLight position={[0, 1, 0]} intensity={1} />
+	<T.PointLight position={[0, -1, 0]} intensity={1} />
+	<T.PointLight position={[1, 0, 0]} intensity={1} />
+	<T.PointLight position={[0, 0, -1]} intensity={1} />
 	<!-- <CircleText /> -->
 	<!-- <Sculpture index={sculptureIndex.index} /> -->
 	<Sculpture index={sculptureIndex.index} />

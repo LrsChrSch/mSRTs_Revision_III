@@ -22,10 +22,12 @@
 	});
 
 	let entered = $state(false);
+
+	let imgHeight = $state(0);
 </script>
 
 <svelte:head>
-	<title>Fraktal-Formen-Raum</title>
+	<title>m-SRT-s | Revision III</title>
 </svelte:head>
 
 <section
@@ -114,9 +116,13 @@
 							}}
 							class="pointer-events-auto text-left md:text-right font-display text-2xl bg-zinc-950 md:pl-4 md:mt-3"
 						>
-							Fraktal-<span class="hidden md:inline"><br /></span>Formen-<span
+							<!-- Signum<span class="hidden md:inline"><br /> </span>Aeternum<span
+								class="hidden md:inline"
+								><br />
+							</span>Iter -->
+							m-SRT-s<span class="hidden md:inline"><br /></span> Revision<span
 								class="hidden md:inline"><br /></span
-							>Raum
+							> III
 						</h1>
 					{/if}
 				</div>
@@ -143,6 +149,7 @@
 								class="blur-xs w-[512px] h-full object-cover group-hover:scale-110 transition-transform duration-500 mix-blend-screen contrast-[120%]"
 								alt="preview"
 								loading="lazy"
+								bind:clientHeight={imgHeight}
 							/>
 
 							<svg
@@ -179,7 +186,8 @@
 							duration: 1000,
 							easing: cubicOut
 						}}
-						class="col-span-2 md:col-start-6 lg:col-start-7 xl:col-start-9 self-end mb-11 bg-zinc-950 pr-4"
+						class="col-span-2 md:col-start-6 lg:col-start-7 xl:col-start-9 self-end mb-11 bg-zinc-950 pr-4 overflow-y-auto"
+						style={'max-height:' + imgHeight + 'px'}
 					>
 						<p class="pointer-events-auto text-sm space-y-1">
 							What is language? What are symbols? What is the meaning of meaning? If language shapes
