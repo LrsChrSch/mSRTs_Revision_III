@@ -2,13 +2,40 @@
 
 ## TODO:
 - Sound (Beide)
-- Projekttitel (Beide/Lars)
 - Texte überarbeiten (Lars)
-- Website Titel / Meta Description, etc. (Lars)
+- Meta Description, etc. (Lars)
 
-### Implementieren
-- `additivStruct.freqPosition` könnte auf die X-Achse der Maus (0 - 1)
-- `additivStruct.filtCf` könnte auf die Y-Achse der Maus (0 - 1)
+### Ars Electronica Einreichung
+Es geht hierbei um den Prix Ars Electronica 2025 in der Kategorie New Animation Art oder Digital Musics / Sound Art
+- Kategorie (würde ich bei New Animation Art belassen)
+- Title: m-SRT-s Revision III
+- Description (Text)
+- Type of the project: Installation
+- Year the project was created 2025
+- URL
+- Credits: -
+- Support Received from: Prof. Kathi Kaeppel, VVVV community, Csound Community
+- Keywords
+- Use of AI (only in the web version):
+	- Verteilung der Texte mit Hilfe von Embeddings (all-MiniLM-L6-v2)
+	- GitHub Copilot Hilfe beim fixen/erklären von Bugs im Code
+- Software
+	- VVVV (using various packages such as Stride and Fuse)
+	- Csound
+	- Svelte / Sveltekit
+	- ThreeJS / Threlte
+- Hardware
+	- (web version):
+		- Any PC or Smartphone will work
+	- (installation):
+		- A windows PC or Laptop with a somewhat decent graphics card (GTX 1080 and upwards works perfectly fine)
+		- Some form of display surface (either a large screen or projection)
+- Submit to other prizes
+	- S+T+ARTS Prize
+- Artists
+	- Philipp von Neumann
+	- Lars Christian Schmidt
+
 
 ## Parameterliste
 
