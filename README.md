@@ -35,6 +35,8 @@ Es geht hierbei um den Prix Ars Electronica 2025 in der Kategorie New Animation 
 - Artists
 	- Philipp von Neumann
 	- Lars Christian Schmidt
+- Uploads
+	- Bilder/Videos/Sounds
 
 
 ## Parameterliste
