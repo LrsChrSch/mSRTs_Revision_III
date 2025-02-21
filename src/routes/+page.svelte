@@ -5,17 +5,10 @@
 	import Scene from '$lib/3D/scene.svelte';
 	import { Canvas } from '@threlte/core';
 	import Renderer from '$lib/3D/renderer.svelte';
-	import { Tween } from 'svelte/motion';
-	import { circInOut, cubicOut } from 'svelte/easing';
-	import { onDestroy, onMount } from 'svelte';
-	import { blur, draw, fly } from 'svelte/transition';
-	import { browser } from '$app/environment';
+	import { cubicOut } from 'svelte/easing';
+	import { onDestroy } from 'svelte';
+	import { blur, draw, fade, fly } from 'svelte/transition';
 	import { soundAdapter } from '$lib/csound.svelte';
-
-	const loadingProgress = new Tween(0, {
-		duration: 1,
-		easing: circInOut
-	});
 
 	onDestroy(() => {
 		soundAdapter.disposeSound();
@@ -24,10 +17,11 @@
 	let entered = $state(false);
 
 	let imgHeight = $state(0);
+	let needsReset = $state(false);
 </script>
 
 <svelte:head>
-	<title>m-SRT-s | Revision III</title>
+	<title>m.SRT.s Revision III</title>
 </svelte:head>
 
 <section
@@ -98,7 +92,10 @@
 				class="text-right pointer-events-auto"
 				onclick={() => {
 					soundAdapter.toggleSound();
-				}}>[{soundAdapter.soundPaused ? 'off' : 'on'}] Sound</button
+				}}
+				><span class="font-display tracking-tighter uppercase"
+					>[{soundAdapter.soundPaused ? 'off' : 'on'}]</span
+				> sound</button
 			>
 		</nav>
 		<div class="flex-1 flex items-start md:justify-center md:items-center z-20">
@@ -114,13 +111,13 @@
 								delay: 300,
 								easing: cubicOut
 							}}
-							class="pointer-events-auto text-left md:text-right font-display text-2xl bg-zinc-950 md:pl-4 md:mt-3"
+							class="pointer-events-auto text-left md:text-right font-bold text-2xl bg-zinc-950 md:pl-4 md:mt-3"
 						>
 							<!-- Signum<span class="hidden md:inline"><br /> </span>Aeternum<span
 								class="hidden md:inline"
 								><br />
 							</span>Iter -->
-							m-SRT-s<span class="hidden md:inline"><br /></span> Revision<span
+							m.SRT.s<span class="hidden md:inline"><br /></span> Revision<span
 								class="hidden md:inline"><br /></span
 							> III
 						</h1>
@@ -176,7 +173,9 @@
 								<rect width="500%" height="500%" filter="url(#noiseFilter)" />
 							</svg>
 						</div>
-						<p class="mt-2 font-display text-stone-400 group-hover:underline">click to enter</p>
+						<p class="mt-2 tracking-tighter font-display text-stone-400 group-hover:underline">
+							click to enter
+						</p>
 					</button>
 				{/if}
 				{#if !entered}
@@ -206,9 +205,26 @@
 				{/if}
 			</div>
 		</div>
-		<footer class="flex justify-end gap-4">
-			<a class="pointer-events-auto" href="https://lrs-chr-sch.de/imprint">Imprint</a>
-			<a class="pointer-events-auto" href="https://lrs-chr-sch.de/privacy">Privacy</a>
+		<footer class="flex gap-4 {entered ? 'justify-between' : 'justify-end'}">
+			{#if entered}
+				<button
+					in:fade={{
+						duration: 1000,
+						delay: 2000
+					}}
+					class="text-right pointer-events-auto"
+					onclick={() => {
+						needsReset = true;
+						setTimeout(() => {
+							needsReset = false;
+						}, 1);
+					}}><span class="font-display tracking-tighter uppercase">[reset]</span> cam</button
+				>
+			{/if}
+			<div class="flex gap-4">
+				<a class="pointer-events-auto" href="https://lrs-chr-sch.de/imprint">Imprint</a>
+				<a class="pointer-events-auto" href="https://lrs-chr-sch.de/privacy">Privacy</a>
+			</div>
 		</footer>
 	</div>
 </section>
@@ -216,6 +232,6 @@
 <main>
 	<Canvas>
 		<Renderer />
-		<Scene />
+		<Scene {needsReset} />
 	</Canvas>
 </main>

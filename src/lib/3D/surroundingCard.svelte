@@ -127,7 +127,7 @@
 				color="#737373"
 				anchorX="center"
 				anchorY="middle"
-				font="/fonts/NimbusSanL-Regu.ttf"
+				font="/fonts/SuisseIntl-Bold.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
 				fontSize={Math.max(

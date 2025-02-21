@@ -118,7 +118,7 @@ function generatePointData() {
         noneChance = Math.min(1, 0.1 * Math.exp((distanceFromOrigin - 100) / 100));
     }
 
-    console.log('noneChance', noneChance);
+    // console.log('noneChance', noneChance);
 
     // console.log(textsCopy.length, bigTextsCopy.length);
 
@@ -138,7 +138,7 @@ function generatePointData() {
         let type = 'image';
         if (noiseValue < noneChance) {
             type = 'none';
-            console.log("None triggered")
+            // console.log("None triggered")
         } else if (noiseValue > map(interactions.num, 0, interactionsClamp, 0.5, 0.7, true)) {
             type = 'text';
         }
@@ -167,7 +167,7 @@ function generatePointData() {
     if (!containsImage) {
         // set all points to text and give them the same text "void"
         // do not change the index
-        console.log("Reached End")
+        // console.log("Reached End")
         soundAdapter.reachedEndInteraction();
         pointData = pointData.map(point => {
             return {

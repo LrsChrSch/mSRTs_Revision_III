@@ -72,7 +72,7 @@
 				color="#d6d3d1"
 				anchorX={isPositiveZ ? 'right' : 'left'}
 				anchorY="middle"
-				font="/fonts/STIXTwoText-Italic.ttf"
+				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
 				fontSize={textSize}
@@ -90,7 +90,7 @@
 				color="#d6d3d1"
 				anchorX={isPositiveZ ? 'left' : 'right'}
 				anchorY="middle"
-				font="/fonts/STIXTwoText-Italic.ttf"
+				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
 				fontSize={textSize}
@@ -135,7 +135,7 @@
 				color="#d6d3d1"
 				anchorX="left"
 				anchorY="middle"
-				font="/fonts/STIXTwoText-Italic.ttf"
+				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
 				fontSize={textSize}
@@ -151,7 +151,7 @@
 				color="#d6d3d1"
 				anchorX="right"
 				anchorY="middle"
-				font="/fonts/STIXTwoText-Italic.ttf"
+				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
 				fontSize={textSize}
@@ -198,7 +198,7 @@
 				color="#d6d3d1"
 				anchorX={isPositiveX ? 'left' : 'right'}
 				anchorY="middle"
-				font="/fonts/STIXTwoText-Italic.ttf"
+				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
 				fontSize={textSize}
@@ -222,7 +222,7 @@
 				color="#d6d3d1"
 				anchorX={isPositiveX ? 'right' : 'left'}
 				anchorY="middle"
-				font="/fonts/STIXTwoText-Italic.ttf"
+				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
 				fontSize={textSize}

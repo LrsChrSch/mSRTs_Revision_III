@@ -1,15 +1,29 @@
 @import 'tailwindcss';
 
 @font-face {
-	font-family: 'Nimbus San L';
-	src: url('/fonts/NimbusSanL-Regu.ttf') format('truetype');
+	font-family: 'Suisse Intl';
+	src: url('/fonts/SuisseIntl-Regular.otf') format('opentype');
 	font-weight: normal;
 	font-style: normal;
 }
 
+@font-face {
+	font-family: 'Suisse Intl Mono';
+	src: url('/fonts/SuisseIntlMono-Regular.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Suisse Intl Mono';
+	src: url('/fonts/SuisseIntlMono-Bold.otf') format('opentype');
+	font-weight: bold;
+	font-style: normal;
+}
+
 @theme {
-	--font-display: 'STIX Two Text Variable', 'serif';
-	--font-sans: 'Nimbus San L', 'sans-serif';
+	--font-display: 'Suisse Intl Mono', 'STIX Two Text Variable', 'serif';
+	--font-sans: 'Suisse Intl', 'Nimbus San L', 'sans-serif';
 }
 
 * {

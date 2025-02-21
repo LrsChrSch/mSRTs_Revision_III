@@ -61,6 +61,8 @@
 
 	let screenPosition: [x: Number, y: Number, z: Number] = $state([0, 0, 0]);
 
+	let { needsReset } = $props();
+
 	let cursorX = $state(0.5);
 	let cursorY = $state(0.5);
 	onMount(async () => {
@@ -80,6 +82,18 @@
 
 	onDestroy(() => {
 		window.removeEventListener('mousemove', () => {});
+	});
+
+	let maxDistance = $state(3);
+
+	$effect(() => {
+		if (needsReset) {
+			cameraRef?.position.set(origin.origin[0] - 5, origin.origin[1] + 2.5, origin.origin[2] + 5);
+			maxDistance = 0;
+			setTimeout(() => {
+				maxDistance = 3;
+			}, 1);
+		}
 	});
 
 	useTask(() => {
@@ -126,7 +140,7 @@
 		dampingFactor={0.1}
 		maxDistance={5}
 		minDistance={0.05}
-		maxTargetRadius={3}
+		maxTargetRadius={maxDistance}
 		cursor={targetTween.current}
 	/>
 </T.PerspectiveCamera>

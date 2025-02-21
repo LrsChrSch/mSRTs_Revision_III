@@ -3,6 +3,7 @@
 // for example: the surroundingCard component updates the origin and the sculpture uses that info to animate itself
 
 import { soundAdapter } from '$lib/csound.svelte';
+import { useThrelte } from '@threlte/core';
 import { cubicInOut } from 'svelte/easing'
 import { Tween } from 'svelte/motion'
 import { writable } from 'svelte/store'
@@ -137,3 +138,7 @@ function createInvalidateSurroundingStore() {
     }
 }
 export const invalidateSurrounding = createInvalidateSurroundingStore()
+
+
+
+
