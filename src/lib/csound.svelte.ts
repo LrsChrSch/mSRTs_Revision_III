@@ -3,7 +3,7 @@
 // functions like volume control and events are defined here and get executed from other modules
 
 import { browser } from "$app/environment";
-import csd from '$lib/csound/main.csd?raw'
+import csd from '$lib/csound/main.orc?raw'
 import helper from '$lib/csound/helper.udo?raw'
 import additivStruct from '$lib/csound/additivStruct.csd?raw'
 import subBeatings from '$lib/csound/subBeatings.csd?raw'
@@ -42,11 +42,9 @@ class SoundAdapter {
 
         this.csound = await Csound({ useWorker: true, }); // useWorker, so it runs in a separate thread, inputChannelCount: 0, so it doesn't expect any input
 
-        this.csound?.removeAllListeners("message"); // comment this out if you want to see the console messages from Csound
+ //       this.csound?.removeAllListeners("message"); // comment this out if you want to see the console messages from Csound
 
         // console.log(csound)
-
-        await this.csound?.setOption("-m0");
 
         const encoder = new TextEncoder();
         const helperBinary = encoder.encode(helper);
@@ -59,7 +57,10 @@ class SoundAdapter {
 
         const filePaths = await this.csound?.fs.readdir("/");
         // console.log("Csound File System:", filePaths);
-        await this.csound?.compileCsdText(csd);
+		await this.csound?.setOption("-d");
+		await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
+		await this.csound?.setOption("-odac");
+        await this.csound?.compileOrc("SR=44100\nksmps=32\n0dbfs=1\nnchnls=2\nnchnls_i=1\n" + csd);
     }
 
     async startSound() {

@@ -1,13 +1,3 @@
-<CsoundSynthesizer>
-<CsOptions>
--odac -d 
---port=10000 
-</CsOptions>
-<CsInstruments>
-sr = 48000
-ksmps = 16
-nchnls = 2
-0dbfs = 1
 
 
 #include "./helper.udo"
@@ -70,34 +60,61 @@ opcode oversine, a, kkkio
   xout aSig
 endop
 
-instr transitionSound
-  // sine with undertones
-  kGain = db(-12)
-  kFreq = 12000
-  kAmpWeight = 0.75
-  kBrowserData = i(gkSubBeatings)
-  printk2 kBrowserData
-  kFreqRatio = (3.33 * (kBrowserData - 0.5)) + 0.1
-  printk2 kFreqRatio
-  iNumOfPartials = 5
-  aUnderSine = undersine(kFreq, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
-  aUnderSine *= kGain
+;; instr transitionSound
+;;   // sine with undertones
+;;   kGain = db(-12)
+;;   kFreq = 12000
+;;   kAmpWeight = 0.75
+;;   kBrowserData = i(gkSubBeatings)
+;;   printk2 kBrowserData
+;;   kFreqRatio = (3.33 * (kBrowserData - 0.5)) + 0.1
+;;   printk2 kFreqRatio
+;;   iNumOfPartials = 5
+;;   aUnderSine = undersine(kFreq, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
+;;   aUnderSine *= kGain
 
-  // sine with overtones
-  aOverSine = oversine(giRoot, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
-  aOverSine *= kGain
-  aSum = sum(aUnderSine / 2, aOverSine / 2)
+;;   // sine with overtones
+;;   aOverSine = oversine(giRoot, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
+;;   aOverSine *= kGain
+;;   aSum = sum(aUnderSine / 2, aOverSine / 2)
+  
+;;   // envelope
+;;   aEnv = transeg(0, 0.01, 5, 1, 2, -2, 0)
+;;   aSum *= aEnv
+
+;;   // clip
+;;   aSum = clip(aSum, 2, db(-4))
+  
+;;   // hilbert
+;;   aSig1, aSig2 hilbert aSum
+
+  
+;;   // send to master
+;;   gaMasterBus[0] = gaMasterBus[0] + aSig1
+;;   gaMasterBus[1] = gaMasterBus[1] + aSig2
+;; endin
+
+instr transitionSound
+  // noise generator
+  kAmp = db(-24)
+  kBeta = 0 // 0 = white, 1 = pink, 2 = brown
+  aNoise = noise(kAmp, kBeta)
+
+  // filter
+  kCf = line(30, p3, 600)
+  kRes = 0.5;limit(0.5, 0, 0.9)
+  aFiltNoise = moogladder2(aNoise, kCf, kRes)
   
   // envelope
-  aEnv = transeg(0, 0.01, 5, 1, 2, -2, 0)
-  aSum *= aEnv
+  aEnv = transeg(0, p3 * 0.9, 2, 1, p3 * 0.1, 1, 1)
+  aFiltNoise *= aEnv
 
-  // clip
-  aSum = clip(aSum, 2, db(-4))
-  
   // hilbert
-  aSig1, aSig2 hilbert aSum
+  aSig1, aSig2 hilbert aFiltNoise
 
+  // send to reverb
+  gaReverbBus[0] = gaReverbBus[0] + (aSig1*0.25)
+  gaReverbBus[1] = gaReverbBus[1] + (aSig2*0.25)
   
   // send to master
   gaMasterBus[0] = gaMasterBus[0] + aSig1
@@ -150,7 +167,3 @@ endin
 schedule("masterBus", 0, giGlobalTime)
 
 
-</CsInstruments>
-<CsScore>
-</CsScore>
-</CsoundSynthesizer>
