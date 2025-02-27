@@ -7,6 +7,8 @@ import csd from '$lib/csound/main.orc?raw'
 import helper from '$lib/csound/helper.udo?raw'
 import additivStruct from '$lib/csound/additivStruct.csd?raw'
 import subBeatings from '$lib/csound/subBeatings.csd?raw'
+import hoveredSound from '$lib/csound/hoveredSound.csd?raw'
+import transitionSound from '$lib/csound/transitionSound.csd?raw'
 import type { CsoundObj } from "@csound/browser";
 let Csound: typeof import("@csound/browser").Csound;
 
@@ -53,6 +55,10 @@ class SoundAdapter {
         await this.csound?.fs.writeFile("additivStruct.csd", additivStructBinary);
         const subBeatingsBinary = encoder.encode(subBeatings);
         await this.csound?.fs.writeFile("subBeatings.csd", subBeatingsBinary);
+        const hoveredSoundBinary = encoder.encode(hoveredSound);
+        await this.csound?.fs.writeFile("hoveredSound.csd", hoveredSoundBinary);
+        const transitionSoundBinary = encoder.encode(transitionSound);
+        await this.csound?.fs.writeFile("transitionSound.csd", transitionSoundBinary);
 
 
         const filePaths = await this.csound?.fs.readdir("/");
