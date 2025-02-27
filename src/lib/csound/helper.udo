@@ -124,3 +124,33 @@ opcode array_offsets, i[], i[]i
   
   xout iOffsets
 endop
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; some synth udos 
+opcode undersine, a, kkkio
+  kFreq, kAmpWeight, kFreqRatio, iNumOfUndertones, iIndex xin
+
+  aSig = poscil(0dbfs / iNumOfUndertones, kFreq)
+
+  if (iIndex < iNumOfUndertones) then
+	aSigNew = undersine(kFreq / kFreqRatio, kFreqRatio, kAmpWeight, iNumOfUndertones, iIndex + 1)
+	aSigNew = (kAmpWeight / sqrt(iIndex+1)) * aSigNew
+	aSig += aSigNew
+  endif
+  
+  xout aSig
+endop
+
+opcode oversine, a, kkkio
+  kFreq, kAmpWeight, kFreqRatio, iNumOfOvertones, iIndex xin
+
+  aSig = poscil(0dbfs / iNumOfOvertones, kFreq)
+
+  if (iIndex < iNumOfOvertones) then
+	aSigNew = oversine(kFreq * kFreqRatio, kFreqRatio, kAmpWeight, iNumOfOvertones, iIndex + 1)
+	aSigNew = (kAmpWeight / sqrt(iIndex+1)) * aSigNew
+	aSig += aSigNew
+  endif
+  
+  xout aSig
+endop

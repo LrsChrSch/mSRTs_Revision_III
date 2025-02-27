@@ -126,9 +126,16 @@ class SoundAdapter {
         // index is the sculpture index (0-319). Index is -1 if nothing is hovered
 
         // console.log(value)
-
         // just in case you need a boolean value for the hovered state
         // let hovered = value !== -1;
+		let hovered;
+		if (value != -1){
+			hovered = 1;
+		} else {
+			hovered = 0;
+		}
+		// console.log(hovered);
+		await this.csound?.setControlChannel('hovered', hovered);
     }
 
     async globalPositionHandler(x: number, y: number, z: number) {

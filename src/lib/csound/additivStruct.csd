@@ -30,15 +30,10 @@ endin
 
 instr additivStructSig
   // get data from browser
-  ;; kPointer = chnget(additivStruct.freqPosition)
-  ;; aPointer = port(kPointer, 0.25)
   kCutOff = gkAdditivStructFiltCf
-;;  kCutOff = 1 
 
   // freq table
-  iFreqFt = ftgen(0, 0, 1024, -7, p5, 1024, p6)
-  aPointer = line(0, p3, 1)
-  aFreq = tablei:a(aPointer, iFreqFt, 1)
+  aFreq = line(p5, p3, p6)
   
   // signal
   aSig = poscil3(p4, aFreq) 
