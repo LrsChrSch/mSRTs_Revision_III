@@ -10,6 +10,9 @@ gaReverbBus[] init 2
 instr tableData
   giSine = ftgen(0, 0, 4096, 10, 1)
   giHanning = ftgen(0, 0, 4096, 20, 2)
+  giSoftTanh = ftgen(0, 0, 4096, "tanh", -1, 1, 0)
+  giMidTanh = ftgen(0, 0, 4096, "tanh", -10, 10, 0)
+  giHeavyTanh = ftgen(0, 0, 4096, "tanh", -100, 100, 0)
 endin
 schedule("tableData", 0, giGlobalTime)
 
@@ -60,65 +63,67 @@ opcode oversine, a, kkkio
   xout aSig
 endop
 
-;; instr transitionSound
-;;   // sine with undertones
-;;   kGain = db(-12)
-;;   kFreq = 12000
-;;   kAmpWeight = 0.75
-;;   kBrowserData = i(gkSubBeatings)
-;;   printk2 kBrowserData
-;;   kFreqRatio = (3.33 * (kBrowserData - 0.5)) + 0.1
-;;   printk2 kFreqRatio
-;;   iNumOfPartials = 5
-;;   aUnderSine = undersine(kFreq, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
-;;   aUnderSine *= kGain
-
-;;   // sine with overtones
-;;   aOverSine = oversine(giRoot, kAmpWeight, abs(kFreqRatio), iNumOfPartials)
-;;   aOverSine *= kGain
-;;   aSum = sum(aUnderSine / 2, aOverSine / 2)
-  
-;;   // envelope
-;;   aEnv = transeg(0, 0.01, 5, 1, 2, -2, 0)
-;;   aSum *= aEnv
-
-;;   // clip
-;;   aSum = clip(aSum, 2, db(-4))
-  
-;;   // hilbert
-;;   aSig1, aSig2 hilbert aSum
-
-  
-;;   // send to master
-;;   gaMasterBus[0] = gaMasterBus[0] + aSig1
-;;   gaMasterBus[1] = gaMasterBus[1] + aSig2
-;; endin
-
 instr transitionSound
-  // noise generator
-  kAmp = db(-24)
-  kBeta = 0 // 0 = white, 1 = pink, 2 = brown
-  aNoise = noise(kAmp, kBeta)
-
-  // filter
-  kCf = line(30, p3, 600)
-  kRes = 0.5;limit(0.5, 0, 0.9)
-  aFiltNoise = moogladder2(aNoise, kCf, kRes)
+  ;; noise sections
+  // noise generator and waveshaping
+  kNoiseAmp = db(-12)
+  kBeta = -0.99 // 0 = white, 1 = pink, 2 = brown
+  aNoise = noise(kNoiseAmp, kBeta)
+  aNoise = distort(aNoise, 1, giHeavyTanh)
   
-  // envelope
-  aEnv = transeg(0, p3 * 0.9, 2, 1, p3 * 0.1, 1, 1)
-  aFiltNoise *= aEnv
+  // filter noise
+  kCf = line(80, p3, 500)
+  kRes = 0.3;limit(0.5, 0, 0.9)
+  aNoise = moogladder2(aNoise, kCf, kRes)
+  
+  // envelope noise
+  aEnv = transeg(0, p3 * 0.8, -5, 1, p3 * 0.2, 5, 0)
+  aNoise *= aEnv
 
-  // hilbert
-  aSig1, aSig2 hilbert aFiltNoise
+  ;; sub section 
+  // sub triangle wave 
+  kFreqTri = giRoot * 2^(-7/12)
+  aTri = vco2(db(6), kFreqTri, 12)
+  
+  // triangle waveshaping
+  kShapeAmount = 1;transeg(0, p3*0.75, 1.5, 0.9, p3*0.25, 0, 1)
+  aTri = distort(aTri, kShapeAmount, giMidTanh)
+  
+  // sub sine
+  kSubSineFreq = line(giRoot * 2^(-7/12), p3, giRoot)
+  aSine = poscil(db(-3), kSubSineFreq)
+  
+  // summing sub signals
+  aSub = sum(aTri, aSine)
+  
+  // sub mod 
+  kModFreq = line(30, p3, 1)
+  aMod = randomh(-1, 1, kModFreq)  
+  aSub *= aMod
+  
+  // filter sub
+  aSub = moogladder2(aSub, 500, 0.75)
+  
+  // envelope sub
+  aEnvSub = transeg(0, p3 * 0.9, 2.5, 1, p3 * 0.2, 5, 0)
+  aSub *= aEnvSub
+  
+  ;; summing section
+  // sum signals 
+  aSum = sum(aNoise, aSub)
+  aSum = distort(aSum, 0.5, giSoftTanh)
 
+  // envelope sum
+  aSumEnv = linseg(0, 0.01, 1, p3 - 0.04, 1, 0.03, 0)
+  aSum *= aSumEnv
+  
   // send to reverb
-  gaReverbBus[0] = gaReverbBus[0] + (aSig1*0.25)
-  gaReverbBus[1] = gaReverbBus[1] + (aSig2*0.25)
+  gaReverbBus[0] = gaReverbBus[0] + (aSum*0.125)
+  gaReverbBus[1] = gaReverbBus[1] + (aSum*0.125)
   
   // send to master
-  gaMasterBus[0] = gaMasterBus[0] + aSig1
-  gaMasterBus[1] = gaMasterBus[1] + aSig2
+  gaMasterBus[0] = gaMasterBus[0] + aSum
+  gaMasterBus[1] = gaMasterBus[1] + aSum
 endin
 
 
