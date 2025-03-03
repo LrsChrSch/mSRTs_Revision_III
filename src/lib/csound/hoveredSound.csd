@@ -1,7 +1,7 @@
 instr hoveredSound
   // set data
   iStructure1[] fillarray 4, 3, 4
-  iStructure2[] = iStructure1 * 1
+  iStructure2[] fillarray 3, 4, 5
   iScaleDivision1 = 12
   iScaleDivision2 = iScaleDivision1 
   iRoot = giRoot * 16
@@ -17,7 +17,7 @@ instr hoveredSound
   // call synth
   iCnt init 0
   while (iCnt < iNumOfNotes) do
-	schedule("hoveredSoundSig", 0, p3, (db(-28) / iNumOfNotes / 2), 
+	schedule("hoveredSoundSig", 0, p3, (db(-35) / iNumOfNotes / 2), 
     iNoteSelection1[iCnt], iNoteSelection2[iCnt])  
 	iCnt += 1
   od
@@ -32,7 +32,7 @@ instr hoveredSoundSig
   aSig = poscil3(p4, aFreq) 
 
   // trigger envelope
-  iAtt = random:i(1.5, 2)
+  iAtt = random:i(2.5, 3)
   iRel = iAtt
   iSusTime = p3 - (iAtt + iRel)
   aTrigEnv = linsegr(0, iAtt, 1, iSusTime, 1, iRel, 0)

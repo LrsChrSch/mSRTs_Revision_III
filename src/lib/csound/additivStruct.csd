@@ -28,6 +28,11 @@ instr additivStruct
   turnoff 
 endin
 
+instr ducker
+  iDuckGain = db(-3.5)
+  gkDuckEnv = linsegr(1, 3, iDuckGain, p3-6, iDuckGain, 3, 1)
+endin
+
 instr additivStructSig
   // get data from browser
   kCutOff = gkAdditivStructFiltCf
@@ -39,7 +44,7 @@ instr additivStructSig
   aSig = poscil3(p4, aFreq) 
 
   // envelope
-  iAtt = random:i(0.25, 2)
+  iAtt = random:i(2, 4)
   iRel = iAtt
   iSusTime = p3 - (iAtt + iRel)
   aEnv linseg 0, iAtt, 1, iSusTime, 1, iRel, 0
@@ -47,6 +52,9 @@ instr additivStructSig
 
   // filter
   aSig = butterlp(aSig, 60 + ((1 - kCutOff) * 200))
+
+  // ducking
+  aSig *= gkDuckEnv
   
   // panning
   aOut1, aOut2 pan2 aSig, random:i(0,1) 
