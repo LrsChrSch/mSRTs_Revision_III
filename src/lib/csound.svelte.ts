@@ -9,6 +9,8 @@ import additivStruct from '$lib/csound/additivStruct.csd?raw'
 import subBeatings from '$lib/csound/subBeatings.csd?raw'
 import hoveredSound from '$lib/csound/hoveredSound.csd?raw'
 import transitionSound from '$lib/csound/transitionSound.csd?raw'
+import objectSound from '$lib/csound/objectSound.csd?raw'
+import padSndfl from '$lib/csound/sndfls/pad.wav?raw'
 import type { CsoundObj } from "@csound/browser";
 let Csound: typeof import("@csound/browser").Csound;
 
@@ -59,6 +61,10 @@ class SoundAdapter {
         await this.csound?.fs.writeFile("hoveredSound.csd", hoveredSoundBinary);
         const transitionSoundBinary = encoder.encode(transitionSound);
         await this.csound?.fs.writeFile("transitionSound.csd", transitionSoundBinary);
+        const objectSoundBinary = encoder.encode(objectSound);
+        await this.csound?.fs.writeFile("objectSound.csd", objectSoundBinary);
+        const padSndflBinary = encoder.encode(padSndfl);
+        await this.csound?.fs.writeFile("pad.wav", padSndflBinary);
 
 
         const filePaths = await this.csound?.fs.readdir("/");
@@ -101,13 +107,7 @@ class SoundAdapter {
         // `)
         await this.csound?.evalCode(`schedule("transitionSound", 0, 2.75)`);
     }
-
-    async transitionFinishedInteraction() {
-        // this gets called when the transition to the next sculpture is finished
-        // this also gets called once at the very beginning
-
-    }
-
+    
     async loadSculptureInteraction(value: number) {
         // this function handles both the index (value) (0-319) and the data of the sculpture
         const jsonData = await fetch(`/data/${value}Data.json`).then(async (res) => {
@@ -167,9 +167,18 @@ class SoundAdapter {
 
     async sculptureInstanceAmountHandler(value: number) {
         // the value is an integer value around ~200000
-        // it gets called every time a sculpture is loaded (approx. 750ms after an interaction) and reflects the amount of tiny cubes that are visible
+        // it gets called every time a sculpture is loaded (approx.
+		// 750ms after an interaction) and reflects the amount of tiny
+		// cubes that are visible
+		await this.csound?.setControlChannel('numOfCubes', value);
     }
-
+	
+	async transitionFinishedInteraction() {
+        // this gets called when the transition to the next sculpture is finished
+        // this also gets called once at the very beginning
+		await this.csound?.evalCode(`schedule("objectSoundTrig", 0, 30)`);
+    }
+	
     async reachedEndInteraction() {
         // this is called if a user has traveled so far (or had bad luck) that no other image cards are visible and they're effectively stuck in the 3D space
         // the sound could go very crazy or turn off almost completely here.

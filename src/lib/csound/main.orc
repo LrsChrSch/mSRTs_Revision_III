@@ -8,11 +8,22 @@ gaMasterBus[] init 2
 gaReverbBus[] init 2
 
 instr tableData
+  // wave forms
   giSine = ftgen(0, 0, 4096, 10, 1)
+
+  // window functions
   giHanning = ftgen(0, 0, 4096, 20, 2)
+
+  // transfer functions 
   giSoftTanh = ftgen(0, 0, 4096, "tanh", -1, 1, 0)
   giMidTanh = ftgen(0, 0, 4096, "tanh", -10, 10, 0)
   giHeavyTanh = ftgen(0, 0, 4096, "tanh", -100, 100, 0)
+
+  // sndfl ft
+  giPad = ftgen(0, 0, 0, 1, "pad.wav", 0, 0, 0, 0)
+
+  // phase dist ft
+  giPhs1 = ftgen(0, 0, 4096, 8, 0, 4096, 1)
 endin
 schedule("tableData", 0, giGlobalTime)
 
@@ -22,6 +33,7 @@ instr getDataFromBrowser
   gkAdditivStructFiltCf = port(kCursorPosYHandler, 0.25)
   kCursorPosXHandler = chnget:k("cursorPosXHandler")
   gkSubBeatings = port(kCursorPosXHandler, 0.25)
+  gkNumOfCubes = chnget:k("numOfCubes")
 
   // event data
   kHovered = chnget:k("hovered")
@@ -46,6 +58,11 @@ schedule("main", 0, 1)
 #include "./subBeatings.csd"
 #include "./hoveredSound.csd"
 #include "./transitionSound.csd"
+#include "./objectSound.csd"
+
+instr objectSoundTrig
+  schedule("objectSound", 0, 30, i(gkNumOfCubes))
+endin
 
 instr reverbBus
   // reverb input
