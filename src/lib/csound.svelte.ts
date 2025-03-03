@@ -10,7 +10,7 @@ import subBeatings from '$lib/csound/subBeatings.csd?raw'
 import hoveredSound from '$lib/csound/hoveredSound.csd?raw'
 import transitionSound from '$lib/csound/transitionSound.csd?raw'
 import objectSound from '$lib/csound/objectSound.csd?raw'
-import padSndfl from '$lib/csound/sndfls/pad.wav?raw'
+import padSndfl from '$lib/csound/sndfls/pad.wav'
 import type { CsoundObj } from "@csound/browser";
 let Csound: typeof import("@csound/browser").Csound;
 
@@ -63,8 +63,10 @@ class SoundAdapter {
         await this.csound?.fs.writeFile("transitionSound.csd", transitionSoundBinary);
         const objectSoundBinary = encoder.encode(objectSound);
         await this.csound?.fs.writeFile("objectSound.csd", objectSoundBinary);
-        const padSndflBinary = encoder.encode(padSndfl);
-        await this.csound?.fs.writeFile("pad.wav", padSndflBinary);
+
+		const response = await fetch(padSndfl);
+		const padSndflBinary = new Uint8Array(await response.arrayBuffer());
+		await this.csound?.fs.writeFile("pad.wav", padSndflBinary);
 
 
         const filePaths = await this.csound?.fs.readdir("/");
