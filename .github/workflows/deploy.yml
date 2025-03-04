@@ -22,8 +22,8 @@ jobs:
 
       - name: Replace all files in deployment dir
         run: |
-          rm -rf ~/30c3/static/msrtest/*
-          cp -r build/* ~/30c3/static/msrtest/
+          rm -rf ~/30c3/static/msrts/*
+          cp -r build/* ~/30c3/static/msrts/
 
       - name: Restart Docker Container
         run: |
