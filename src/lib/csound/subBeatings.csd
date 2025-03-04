@@ -10,7 +10,10 @@ instr subBeatings
   aSum = sum(aSine1/2, aSine2/2)
 
   // envelope
-  aEnv = linseg(0, 1, 1, p3 - 2, 1, 1, 0)
+  iAtt = random(2, 4)
+  iRel = iAtt
+  iSusTime = p3 - (2*iAtt)
+  aEnv = linseg(0, iAtt, 1, iSusTime, 1, iRel, 0)
   aSum *= aEnv
   
   // send to master

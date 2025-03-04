@@ -25,8 +25,10 @@ instr getDataFromBrowser
 
   // event data
   kHovered = chnget:k("hovered")
+  schedkwhen(kHovered, 1, 1, "ducker", 0, 60)
   schedkwhen(kHovered, 1, 1, "hoveredSound", 0, 60)
   if (kHovered == 0) then
+	turnoff2("ducker", 0, 1)
 	turnoff2("hoveredSoundSig", 0, 1)
   endif
 endin

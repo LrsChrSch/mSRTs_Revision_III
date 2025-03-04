@@ -67,7 +67,9 @@ class SoundAdapter {
         await this.csound?.setOption("-d");
         await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
         await this.csound?.setOption("-odac");
-        await this.csound?.compileOrc("SR=44100\nksmps=32\n0dbfs=1\nnchnls=2\nnchnls_i=1\n" + csd);
+        await this.csound?.setOption("-B512");
+        await this.csound?.setOption("-b128");
+        await this.csound?.compileOrc("SR=44100\nksmps=16\n0dbfs=1\nnchnls=2\n" + csd);
     }
 
     async startSound() {
