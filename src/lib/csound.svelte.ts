@@ -11,6 +11,7 @@ import hoveredSound from '$lib/csound/hoveredSound.csd?raw'
 import transitionSound from '$lib/csound/transitionSound.csd?raw'
 import type { CsoundObj } from "@csound/browser";
 let Csound: typeof import("@csound/browser").Csound;
+import * as THREE from 'three';
 
 
 class SoundAdapter {
@@ -44,7 +45,7 @@ class SoundAdapter {
 
         this.csound = await Csound({ useWorker: true, }); // useWorker, so it runs in a separate thread, inputChannelCount: 0, so it doesn't expect any input
 
- //       this.csound?.removeAllListeners("message"); // comment this out if you want to see the console messages from Csound
+        //       this.csound?.removeAllListeners("message"); // comment this out if you want to see the console messages from Csound
 
         // console.log(csound)
 
@@ -63,9 +64,9 @@ class SoundAdapter {
 
         const filePaths = await this.csound?.fs.readdir("/");
         // console.log("Csound File System:", filePaths);
-		await this.csound?.setOption("-d");
-		await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
-		await this.csound?.setOption("-odac");
+        await this.csound?.setOption("-d");
+        await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
+        await this.csound?.setOption("-odac");
         await this.csound?.compileOrc("SR=44100\nksmps=32\n0dbfs=1\nnchnls=2\nnchnls_i=1\n" + csd);
     }
 
@@ -127,6 +128,19 @@ class SoundAdapter {
         // value is a number between 0 and 1 (distance from the camera to the origin, 1 is the furthest away)
     }
 
+    async cameraRotationHandler(camera: any) {
+        // convert rotX, rotY and rotZ to radians on pitch yaw and roll axis
+        const worldDirection = new THREE.Vector3();
+        camera.getWorldDirection(worldDirection);
+        console.log(worldDirection.x, worldDirection.y, worldDirection.z)
+
+        // worldDirection is the vector of the camera direction
+        // starts of as x: 0.666, y: -0.333, z: -0.666 (aiming diagonally down to the origin at the start)
+
+
+    }
+
+
     async surroundingHoverInteraction(value: number) {
         // this function gets called when the user hovers over one of the image cards around the origin
         // index is the sculpture index (0-319). Index is -1 if nothing is hovered
@@ -134,14 +148,14 @@ class SoundAdapter {
         // console.log(value)
         // just in case you need a boolean value for the hovered state
         // let hovered = value !== -1;
-		let hovered;
-		if (value != -1){
-			hovered = 1;
-		} else {
-			hovered = 0;
-		}
-		// console.log(hovered);
-		await this.csound?.setControlChannel('hovered', hovered);
+        let hovered;
+        if (value != -1) {
+            hovered = 1;
+        } else {
+            hovered = 0;
+        }
+        // console.log(hovered);
+        await this.csound?.setControlChannel('hovered', hovered);
     }
 
     async globalPositionHandler(x: number, y: number, z: number) {
