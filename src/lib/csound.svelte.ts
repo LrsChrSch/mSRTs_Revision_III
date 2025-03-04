@@ -72,7 +72,7 @@ class SoundAdapter {
         const filePaths = await this.csound?.fs.readdir("/");
         // console.log("Csound File System:", filePaths);
 		await this.csound?.setOption("-d");
-		await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
+		//await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
 		await this.csound?.setOption("-odac");
 		await this.csound?.setOption("-B512");
 		await this.csound?.setOption("-b128");
@@ -178,7 +178,8 @@ class SoundAdapter {
 	async transitionFinishedInteraction() {
         // this gets called when the transition to the next sculpture is finished
         // this also gets called once at the very beginning
-		await this.csound?.evalCode(`schedule("objectSoundTrig", 0, 30)`);
+		// await this.csound?.evalCode(`schedule("objectSoundKill", 0, 1)`);
+		await this.csound?.evalCode(`schedule("objectSoundTrig", 0, 1)`);
     }
 	
     async reachedEndInteraction() {

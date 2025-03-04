@@ -21,7 +21,6 @@ instr hoveredSound
     iNoteSelection1[iCnt], iNoteSelection2[iCnt])  
 	iCnt += 1
   od
-  turnoff 
 endin
 
 instr hoveredSoundSig

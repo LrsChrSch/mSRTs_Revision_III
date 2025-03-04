@@ -1,13 +1,24 @@
+instr objectSoundTrig
+  turnoff2("objectSound", 0, 2)
+  schedule("objectSound", 0, 30, i(gkNumOfCubes))
+  turnoff
+endin
+
+instr objectSoundKill
+  turnoff
+endin
+
 instr objectSound
+  prints("Started")
   // data 
   iNumOfCubes = p4
 
   // ft looper
   
   iFt = giPad
-  kSpeed = 1
+  kSpeed = 1 / ((iNumOfCubes % 4) + 0.25)
   kLoopStart = line(0, p3, 1)
-  kLoopSize = 100
+  kLoopSize = 250
   iOff = 0.5
   iWndwFt = giHanning
   iPhasDistFt = giPhs1

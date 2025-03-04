@@ -1,5 +1,3 @@
-
-
 #include "./helper.udo"
 
 giRoot = 80
@@ -41,6 +39,7 @@ instr getDataFromBrowser
   schedkwhen(kHovered, 1, 1, "hoveredSound", 0, 60)
   if (kHovered == 0) then
 	turnoff2("ducker", 0, 1)
+	turnoff2("hoveredSound", 0, 1)
 	turnoff2("hoveredSoundSig", 0, 1)
   endif
 endin
@@ -60,9 +59,6 @@ schedule("main", 0, 1)
 #include "./transitionSound.csd"
 #include "./objectSound.csd"
 
-instr objectSoundTrig
-  schedule("objectSound", 0, 30, i(gkNumOfCubes))
-endin
 
 instr reverbBus
   // reverb input
