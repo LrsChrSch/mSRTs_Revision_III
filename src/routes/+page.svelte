@@ -200,7 +200,7 @@
 							This project allows the exploration of a virtual space trying to answer these
 							questions. Moving through the space from point to point reveals various viewpoints
 							from science, philosophy, fiction and art. Shifting from meaning to intuition. From
-							reading to observing. From the known to the unknown...
+							reading to observing. From the known to the unknown.
 						</p>
 					</div>
 				{/if}
