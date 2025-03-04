@@ -17,6 +17,7 @@ jobs:
 
       - name: Install dependencies and build
         run: |
+          export PATH="/home/user/.local/share/fnm/node-versions/v22.14.0/installation/bin:$PATH"
           npm install
           npm run build
 
