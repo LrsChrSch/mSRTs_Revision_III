@@ -1,0 +1,31 @@
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Pull latest changes
+        run: git pull origin main
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+
+      - name: Replace all files in deployment dir
+        run: |
+          rm -rf ~/30c3/static/msrtest/*
+          cp -r build/* ~/30c3/static/msrtest/
+
+      - name: Restart Docker Container
+        run: |
+          cd ~/30c3
+          docker compose up -d --build static
