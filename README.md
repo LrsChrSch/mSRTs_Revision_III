@@ -10,6 +10,13 @@ Es geht hierbei um den Prix Ars Electronica 2025 in der Kategorie New Animation 
 - Kategorie (würde ich bei New Animation Art belassen)
 - Title: m-SRT-s Revision III
 - Description (Text)
+	- What is language? What are symbols? What is the meaning of meaning? If language shapes thought, to what extent does it limit our ability to perceive reality? And in a reality of misinformation, infinite viewpoints and computers being capable of rendering imposing high fidelity graphics anywhere, do our simple abstracted symbols even matter? Aren't we ultimately held back by the minimalist character of our 2D alphabetic characters?
+
+"m-SRT-s Revision III" allows the exploration of a virtual space trying to answer these questions. Moving through the space from point to point reveals various viewpoints from science, philosophy, fiction and art. Shifting from meaning to intuition. From reading to observing. From the known to the unknown.
+
+The main focus is a complex morphing 3D shape serving as a placeholder for the aforementioned philosophical ideas and questions and reflecting the fluid hyper-dimensional properties of meaning that's mainly explored by modern machine learning applications. This symbol, placed in a virtual environment, connects both the known space of reality that we navigate daily and the unknown array of (in)finite possibilities that we are yet to understand. Accompanying these visual elements is a fully live-synthesized soundscape, reacting to the shifting parameters of the visualization, pulling viewers into a flow of sound and visuals, heightening focus and immersion.
+
+This project was realized using VVVV (visuals) and Csound (soundscape). The visuals were also ported to a SvelteKit+ThreeJS version for the web.
 - Type of the project: Installation
 - Year the project was created 2025
 - URL

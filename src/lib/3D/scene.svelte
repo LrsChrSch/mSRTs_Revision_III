@@ -104,6 +104,7 @@
 				.length();
 
 			soundAdapter.cameraDistanceHandler(THREE.MathUtils.mapLinear(distanceToOrigin, 0, 5, 0, 1));
+			soundAdapter.cameraRotationHandler(cameraRef);
 
 			const screenSpacePosition = new THREE.Vector2(cursorX, cursorY); // Example screen space coordinate (center of the screen)
 			const ndc = new THREE.Vector3(

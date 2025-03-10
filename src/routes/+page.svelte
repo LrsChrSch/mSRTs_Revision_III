@@ -192,14 +192,15 @@
 							What is language? What are symbols? What is the meaning of meaning? If language shapes
 							thought, to what extent does it limit our ability to perceive reality? And in a
 							reality of misinformation, infinite viewpoints and computers being capable of
-							rendering high fidelity graphics anywhere, do our existing symbols even matter? Aren't
-							we ultimately held back by the simplicity of our 2D alphabetic characters?
+							rendering imposing high fidelity graphics anywhere, do our simple abstracted symbols
+							even matter? Aren't we ultimately held back by the minimalist character of our 2D
+							alphabetic characters?
 						</p>
 						<p class="pointer-events-auto text-sm mt-2">
 							This project allows the exploration of a virtual space trying to answer these
 							questions. Moving through the space from point to point reveals various viewpoints
 							from science, philosophy, fiction and art. Shifting from meaning to intuition. From
-							reading to observing. From the known to the unknown...
+							reading to observing. From the known to the unknown.
 						</p>
 					</div>
 				{/if}
