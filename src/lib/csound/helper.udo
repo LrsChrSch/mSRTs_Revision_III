@@ -183,7 +183,7 @@ opcode split_ft, ii, i
 endop
 
 opcode ft_looper_stereo, aa, ikkkiiik[]
-  //  setksmps 1
+  setksmps 1
   iFt, kSpeed, kLoopStart, kLoopSize, iStereoOffset, iWndwFt, iPhaseDistTable, kMaskArr[] xin
 
   // read data from table

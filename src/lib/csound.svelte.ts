@@ -11,6 +11,7 @@ import hoveredSound from '$lib/csound/hoveredSound.csd?raw'
 import transitionSound from '$lib/csound/transitionSound.csd?raw'
 import objectSound from '$lib/csound/objectSound.csd?raw'
 import padSndfl from '$lib/csound/sndfls/pad.wav'
+import fuzzSndfl from '$lib/csound/sndfls/fuzz.wav'
 import type { CsoundObj } from "@csound/browser";
 let Csound: typeof import("@csound/browser").Csound;
 
@@ -64,9 +65,14 @@ class SoundAdapter {
         const objectSoundBinary = encoder.encode(objectSound);
         await this.csound?.fs.writeFile("objectSound.csd", objectSoundBinary);
 
-		const response = await fetch(padSndfl);
-		const padSndflBinary = new Uint8Array(await response.arrayBuffer());
+		// loading soundfiles
+		const responsePad = await fetch(padSndfl);
+		const padSndflBinary = new Uint8Array(await responsePad.arrayBuffer());
 		await this.csound?.fs.writeFile("pad.wav", padSndflBinary);
+
+		const responseFuzz = await fetch(fuzzSndfl);
+		const fuzzSndflBinary = new Uint8Array(await responseFuzz.arrayBuffer());
+		await this.csound?.fs.writeFile("fuzz.wav", fuzzSndflBinary);
 
 
         const filePaths = await this.csound?.fs.readdir("/");
@@ -74,8 +80,8 @@ class SoundAdapter {
 		await this.csound?.setOption("-d");
 		//await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
 		await this.csound?.setOption("-odac");
-		await this.csound?.setOption("-B512");
-		await this.csound?.setOption("-b128");
+		//await this.csound?.setOption("-B512");
+		//await this.csound?.setOption("-b128");
         await this.csound?.compileOrc("SR=44100\nksmps=16\n0dbfs=1\nnchnls=2\n" + csd);
     }
 
@@ -107,6 +113,7 @@ class SoundAdapter {
         // await this.csound?.evalCode(`
         //   schedule("Flourish", next_time(.25), 0, 0)
         // `)
+		await this.csound?.evalCode(`schedule("objectSoundKill", 0, 1)`);
         await this.csound?.evalCode(`schedule("transitionSound", 0, 2.75)`);
     }
     

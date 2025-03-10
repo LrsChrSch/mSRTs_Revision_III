@@ -19,9 +19,24 @@ instr tableData
 
   // sndfl ft
   giPad = ftgen(0, 0, 0, 1, "pad.wav", 0, 0, 0, 0)
+  giFuzz = ftgen(0, 0, 0, 1, "fuzz.wav", 0, 0, 0, 0)
 
   // phase dist ft
-  giPhs1 = ftgen(0, 0, 4096, 8, 0, 4096, 1)
+  giPhsFtArr[] init 8
+  giPhsFtArr[0] = ftgen(0, 0, 4096, 7, 0, 4096, 1)
+  giPhsFtArr[1] = ftgen(0, 0, 4096, 8, 0, 4096, 1)
+  giPhsFtArr[2] = ftgen(0, 0, 4096, 8, 0, 2048, 0.25, 2048, 1)
+  giPhsFtArr[3] = ftgen(0, 0, 4096, 8, 0, 2048, 0.75, 2048, 1)
+  giPhsFtArr[4] = ftgen(0, 0, 4096, 8, 0, 1024, 0.25, 1024, 0.75,
+	2048, 1)
+  giPhsFtArr[5] = ftgen(0, 0, 4096, 8, 0, 1024, 0.5, 1024, 0.75, 2048,
+	1)
+  giPhsFtArr[6] = ftgen(0, 0, 4096, 8, 0, 1024, 0.25, 1024, 0.3, 1024,
+	0.75, 1024, 1)
+  giPhsFtArr[7] = ftgen(0, 0, 4096, 8, 0, 1024, 0.5, 1024, 0.6, 1024,
+	0.75, 1024, 1)
+  giPhsFtArr[7] = ftgen(0, 0, 4096, 8, 0, 1024, 0.75, 1024, 0.3, 1024,
+	0.75, 1024, 1)
 endin
 schedule("tableData", 0, giGlobalTime)
 
