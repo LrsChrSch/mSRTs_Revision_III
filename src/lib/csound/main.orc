@@ -16,7 +16,7 @@ instr tableData
   giSoftTanh = ftgen(0, 0, 4096, "tanh", -1, 1, 0)
   giMidTanh = ftgen(0, 0, 4096, "tanh", -10, 10, 0)
   giHeavyTanh = ftgen(0, 0, 4096, "tanh", -100, 100, 0)
-
+  
   // sndfl ft
   giPad = ftgen(0, 0, 0, 1, "pad.wav", 0, 0, 0, 0)
   giFuzz = ftgen(0, 0, 0, 1, "fuzz.wav", 0, 0, 0, 0)
@@ -47,7 +47,11 @@ instr getDataFromBrowser
   kCursorPosXHandler = chnget:k("cursorPosXHandler")
   gkSubBeatings = port(kCursorPosXHandler, 0.25)
   gkNumOfCubes = chnget:k("numOfCubes")
-
+  gkCameraX = chnget:k("camera_x")
+  ;;gkCameraX = port(abs(kCameraX), 0.25)
+  gkCameraY = chnget:k("camera_y")
+  ;;  gkCameraY = port(abs(kCameraY), 0.25)
+  
   // event data
   kHovered = chnget:k("hovered")
   schedkwhen(kHovered, 1, 1, "ducker", 0, 60)

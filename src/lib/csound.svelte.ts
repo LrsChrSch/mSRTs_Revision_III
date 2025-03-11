@@ -144,12 +144,13 @@ class SoundAdapter {
         // convert rotX, rotY and rotZ to radians on pitch yaw and roll axis
         const worldDirection = new THREE.Vector3();
         camera.getWorldDirection(worldDirection);
-        console.log(worldDirection.x, worldDirection.y, worldDirection.z)
+        //console.log(worldDirection.x, worldDirection.y, worldDirection.z)
 
         // worldDirection is the vector of the camera direction
-        // starts of as x: 0.666, y: -0.333, z: -0.666 (aiming diagonally down to the origin at the start)
-
-
+        // starts of as x: 0.666, y: -0.333, z: -0.666 (aiming
+        // diagonally down to the origin at the start)
+		await this.csound?.setControlChannel('camera_x', worldDirection.x);
+		await this.csound?.setControlChannel('camera_y', worldDirection.y);
     }
 
 
@@ -200,7 +201,6 @@ class SoundAdapter {
 	async transitionFinishedInteraction() {
         // this gets called when the transition to the next sculpture is finished
         // this also gets called once at the very beginning
-		// await this.csound?.evalCode(`schedule("objectSoundKill", 0, 1)`);
 		await this.csound?.evalCode(`schedule("objectSoundTrig", 0, 1)`);
     }
 	
