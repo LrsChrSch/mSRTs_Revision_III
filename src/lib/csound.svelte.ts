@@ -10,8 +10,8 @@ import subBeatings from '$lib/csound/subBeatings.csd?raw'
 import hoveredSound from '$lib/csound/hoveredSound.csd?raw'
 import transitionSound from '$lib/csound/transitionSound.csd?raw'
 import objectSound from '$lib/csound/objectSound.csd?raw'
-import padSndfl from '$lib/csound/sndfls/pad.wav'
-import fuzzSndfl from '$lib/csound/sndfls/fuzz.wav'
+// import padSndfl from '$lib/csound/sndfls/pad.wav'
+// import fuzzSndfl from '$lib/csound/sndfls/fuzz.wav'
 import type { CsoundObj } from "@csound/browser";
 let Csound: typeof import("@csound/browser").Csound;
 import * as THREE from 'three';
