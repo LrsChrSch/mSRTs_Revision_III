@@ -67,20 +67,20 @@ class SoundAdapter {
         await this.csound?.fs.writeFile("objectSound.csd", objectSoundBinary);
 
 		// loading soundfiles
-		const responsePad = await fetch(padSndfl);
-		const padSndflBinary = new Uint8Array(await responsePad.arrayBuffer());
-		await this.csound?.fs.writeFile("pad.wav", padSndflBinary);
+		// const responsePad = await fetch(padSndfl);
+		// const padSndflBinary = new Uint8Array(await responsePad.arrayBuffer());
+		// await this.csound?.fs.writeFile("pad.wav", padSndflBinary);
 
-		const responseFuzz = await fetch(fuzzSndfl);
-		const fuzzSndflBinary = new Uint8Array(await responseFuzz.arrayBuffer());
-		await this.csound?.fs.writeFile("fuzz.wav", fuzzSndflBinary);
+		// const responseFuzz = await fetch(fuzzSndfl);
+		// const fuzzSndflBinary = new Uint8Array(await responseFuzz.arrayBuffer());
+		// await this.csound?.fs.writeFile("fuzz.wav", fuzzSndflBinary);
 
 
         const filePaths = await this.csound?.fs.readdir("/");
         // console.log("Csound File System:", filePaths);
 
 		await this.csound?.setOption("-d");
-		//await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
+		await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
 		await this.csound?.setOption("-odac");
 		//await this.csound?.setOption("-B512");
 		//await this.csound?.setOption("-b128");
