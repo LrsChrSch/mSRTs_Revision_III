@@ -18,8 +18,8 @@ instr tableData
   giHeavyTanh = ftgen(0, 0, 4096, "tanh", -100, 100, 0)
   
   // sndfl ft
-  giPad = ftgen(0, 0, 0, 1, "pad.wav", 0, 0, 0, 0)
-  giFuzz = ftgen(0, 0, 0, 1, "fuzz.wav", 0, 0, 0, 0)
+  ;; giPad = ftgen(0, 0, 0, 1, "pad.wav", 0, 0, 0, 0)
+  ;; giFuzz = ftgen(0, 0, 0, 1, "fuzz.wav", 0, 0, 0, 0)
 
   // phase dist ft
   giPhsFtArr[] init 8
