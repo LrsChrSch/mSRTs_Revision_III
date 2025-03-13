@@ -1,16 +1,19 @@
 giObjectClickCount init 0
 
 instr objectSoundTrig
-  iCounter = giObjectClickCount % 3
+  iCounter = giObjectClickCount % 4
   printks2("kCounter: %d\n", iCounter)
   if (iCounter == 0) then
-	event_i("i", "objectSound_1", 0, 60, i(gkNumOfCubes))
+	event_i("i", "objectSound_4", 0, 60, i(gkNumOfCubes))
   endif
   if (iCounter == 1) then
 	event_i("i", "objectSound_2", 0, 60, i(gkNumOfCubes))
   endif
   if (iCounter == 2) then
 	event_i("i", "objectSound_3", 0, 60, i(gkNumOfCubes))
+  endif
+  if (iCounter == 3) then
+	event_i("i", "objectSound_4", 0, 60)
   endif
   giObjectClickCount += 1
   turnoff
@@ -24,6 +27,7 @@ instr objectSoundKill
   turnoff2("objectSound_3", 0, 1)
   turnoff2("objectSound_3_triggerEnv", 0, 1)
   turnoff2("objectSound_3_sound", 0, 1)
+  turnoff2("objectSound_4", 0, 1)
   turnoff
 endin
 
@@ -198,4 +202,46 @@ instr objectSound_3_sound ;; rhythmic noise
   gaMasterBus[0] = gaMasterBus[0] + aSig1
   gaMasterBus[1] = gaMasterBus[1] + aSig2  
 endin
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+instr objectSound_4 ;; karplus strong clicks
+  // data from browser
+  kCameraX = port(gkCameraX, 0.125)
+  kCameraY = port(gkCameraY, 0.125)
+  iNumOfCubes = p4
+
+  // click
+  kClickAmp = db(-0.3)
+  kClickFreq = 1 - kCameraX
+  aClick = mpulse(kClickAmp, kClickFreq)
+
+  // delay slurr
+  aDelIn = aClick
+  kDelTime = kCameraY + 0.08 
+  kFdbk = -0.85
+  aDUMP delayr 2
+  aDelOut deltap kDelTime
+;;  kCf = 1000 - (kCameraY * 300)
+  ;;kRes = 0.25
+  delayw aDelIn + (aDelOut * kFdbk)
+  
+  // amp env
+  iAtt = random(1, 2)
+  iRel = iAtt
+  iSusTime = p3 - (iAtt + iRel)
+  aEnv = linsegr(0, iAtt, 1, iSusTime, 1, iRel, 0)
+  aDelOut *= aEnv
+  
+  // gain
+  iGain = db(-16)
+  aDelOut *= iGain
+  
+  // reverb send
+  gaReverbBus[0] = gaReverbBus[0] + (aDelOut * db(-12))
+  gaReverbBus[1] = gaReverbBus[1] + (aDelOut * db(-12))
+
+  // master send
+  gaMasterBus[0] = gaMasterBus[0] + aDelOut
+  gaMasterBus[1] = gaMasterBus[1] + aDelOut 
+endin
+
 
