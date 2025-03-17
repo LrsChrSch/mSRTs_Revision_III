@@ -72,7 +72,7 @@ class SoundAdapter {
 		await this.csound?.setOption("-odac");
 		//await this.csound?.setOption("-B512");
 		//await this.csound?.setOption("-b128");
-        await this.csound?.compileOrc("SR=44100\nksmps=16\n0dbfs=1\nnchnls=2\n" + csd);
+        await this.csound?.compileOrc("SR=44100\nksmps=128\n0dbfs=1\nnchnls=2\n" + csd);
     }
 
     async startSound() {
@@ -117,11 +117,15 @@ class SoundAdapter {
 
         // jsonData contains the following values:
         // jsonData.matrixCount (int 3-5)
-        // jsonData.scaleOffset (float 0-1)
-        // jsonData.rotationRange (int 0-1)
+        // jsonData.scaleOffset (float 0-1) when big the symbol is more geometrical
+        // jsonData.rotationRange (float 0-1) when small then the symbol is more "sparse"
         // jsonData.transformMin (object with x, y, z values)
         // jsonData.transformMax (object with x, y, z values)
         // jsonData.seed (int)
+
+		// console.log(jsonData.matrixCount);
+		await this.csound?.setControlChannel('rotationRange', jsonData.rotationRange);
+		await this.csound?.setControlChannel('scaleOffset', jsonData.scaleOffset);
     }
 
     async cameraDistanceHandler(value: number) {

@@ -3,8 +3,7 @@ instr transitionSound
   // data from browser
   iCameraX = i(gkCameraX) ;; 0 -1 
   iCameraY = i(gkCameraY) ;; 0 -1 
-  print(iCameraY)
-  print(iCameraX)
+
   // basic sound modulation depending on browser data
   // fm output
   if (iCameraY >= 0.01) then

@@ -253,3 +253,11 @@ opcode ft_looper_stereo, aa, ikkkiiik[]
   ;; by philipp von neumann
 endop
 
+opcode linear_scaling, i, iiiii
+  iInValue, iInMin, iInMax, iOutMin, iOutMax xin
+
+  iFraction = ((iInValue - iInMin) / (iInMax - iInMin))
+  iOutValue = iOutMin + iFraction * (iOutMax - iOutMin)
+
+  xout iOutValue
+endop

@@ -4,6 +4,8 @@ giRoot = 80
 giGlobalTime = 1500
 gaMasterBus[] init 2
 gaReverbBus[] init 2
+gaDelBus[] init 2
+gaResonatorBus[] init 2
 
 instr tableData
   // wave forms
@@ -47,6 +49,8 @@ instr getDataFromBrowser
   ;;gkCameraX = port(abs(kCameraX), 0.25)
   gkCameraY = chnget:k("camera_y")
   ;;  gkCameraY = port(abs(kCameraY), 0.25)
+  gkRotationRange = chnget:k("rotationRange")
+  gkScaleOffset = chnget:k("scaleOffset")
   
   // event data
   kHovered = chnget:k("hovered")
@@ -74,6 +78,64 @@ schedule("main", 0, 1)
 #include "./transitionSound.csd"
 #include "./objectSound.csd"
 
+instr resonatorBus
+  // resonator input
+  aResonIn1 = gaResonatorBus[0]
+  aResonIn2 = gaResonatorBus[1]
+  clear(gaResonatorBus)
+  
+  // resonator
+  kResonFreq1 = giRoot * randomi(1, 2, 0.125)
+  kFdbk1 = 0.95
+  aReson1 = streson(aResonIn1, kResonFreq1, kFdbk1)
+
+  kResonFreq2 = kResonFreq1 * 1.1
+  kFdbk2 = kFdbk1
+  aReson2 = streson(aResonIn2, kResonFreq2, kFdbk2)
+
+  // reverb send
+  gaReverbBus[0] = gaReverbBus[0] + (aReson1 * 0.25)
+  gaReverbBus[1] = gaReverbBus[1] + (aReson2 * 0.25)
+
+  // master send
+  gaMasterBus[0] = gaMasterBus[0] + aReson1
+  gaMasterBus[1] = gaMasterBus[1] + aReson2
+endin
+schedule("resonatorBus", 0, giGlobalTime)
+
+instr delayBus
+  // delay input
+  aDelIn1 = gaDelBus[0]
+  aDelIn2 = gaDelBus[1]
+  clear(gaDelBus)
+
+  // delay
+  kDelTime1 = 0.3
+  kFdbk1 = 0.5
+  aDUMP1 delayr 5
+  aDelOut1 = deltap3(kDelTime1)
+  delayw(aDelIn1 + (aDelOut1 * kFdbk1))
+
+  kDelTime2 = kDelTime1 + 0.01
+  kFdbk2 = kFdbk1
+  aDUMP2 delayr 5
+  aDelOut2 = deltap3(kDelTime2)
+  delayw(aDelIn2 + (aDelOut2 * kFdbk2))
+
+  // gain control
+  iGain = db(-12)
+  aDelOut1 *= iGain
+  aDelOut2 *= iGain
+  
+  // reverb send
+  gaReverbBus[0] = gaReverbBus[0] + (aDelOut1 * 0.25)
+  gaReverbBus[1] = gaReverbBus[1] + (aDelOut2 * 0.25)
+
+  // master send
+  gaMasterBus[0] = gaMasterBus[0] + aDelOut1
+  gaMasterBus[1] = gaMasterBus[1] + aDelOut2
+endin
+schedule("delayBus", 0, giGlobalTime)
 
 instr reverbBus
   // reverb input
