@@ -17,7 +17,7 @@
 
 	const size = 0.005;
 	const scale = 3;
-	const noise = 0.01;
+	const noise = 0.005;
 	const count = 1000000;
 
 	const geometry = new THREE.BoxGeometry(size, size, size);
@@ -42,7 +42,7 @@
 			const dataArray = Array.from(new Uint8Array(decompressed));
 
 			// Convert into 2D format (assuming 4 columns per row)
-			const numColumns = 4;
+			const numColumns = 3;
 
 			let maxSize = -1;
 			const average = new THREE.Vector3(0, 0, 0);
@@ -51,36 +51,32 @@
 
 			for (let i = 0; i < dataArray.length; i += numColumns) {
 				const data = dataArray.slice(i, i + numColumns);
-				const w = data[3] / 255;
-				if (w > 0.8) {
-					let x = data[0] / 255;
-					let y = data[1] / 255;
-					let z = data[2] / 255;
 
-					const weight = (w - 0.8) / 0.2;
-					const customNoise = noise * (1 - w ** 4);
+				let x = data[0] / 255;
+				let y = data[1] / 255;
+				let z = data[2] / 255;
 
-					x += Math.random() * customNoise - customNoise / 2;
-					y += Math.random() * customNoise - customNoise / 2;
-					z += Math.random() * customNoise - customNoise / 2;
+				x = x * 2 - 1;
+				y = y * 2 - 1;
+				z = z * 2 - 1;
 
-					x = x * 2 - 1;
-					y = y * 2 - 1;
-					z = z * 2 - 1;
+				x += (Math.random() - 0.5) * noise;
+				y += (Math.random() - 0.5) * noise;
+				z += (Math.random() - 0.5) * noise;
 
-					dummy.position.set(x, y, z);
-					dummy.scale.setScalar(weight);
-					dummy.updateMatrix();
+				dummy.position.set(x, y, z);
+				const distance = Math.sqrt(x * x + y * y + z * z);
+				dummy.scale.setScalar(1.5 - distance);
+				dummy.updateMatrix();
 
-					mesh.setMatrixAt(total, dummy.matrix);
+				mesh.setMatrixAt(total, dummy.matrix);
 
-					// set maxSize to the length of the longest x and z vector
-					const length = Math.sqrt(x ** 2 + z ** 2);
-					maxSize = Math.max(maxSize, length);
-					average.add(dummy.position);
+				// set maxSize to the length of the longest x and z vector
+				const length = Math.sqrt(x ** 2 + z ** 2);
+				maxSize = Math.max(maxSize, length);
+				average.add(dummy.position);
 
-					total++;
-				}
+				total++;
 			}
 
 			sculptureSize.set(maxSize);

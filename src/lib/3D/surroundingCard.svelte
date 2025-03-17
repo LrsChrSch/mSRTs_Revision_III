@@ -127,6 +127,7 @@
 				color="#737373"
 				anchorX="center"
 				anchorY="middle"
+				characters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?.,-'"
 				font="/fonts/SuisseIntl-Bold.otf"
 				position={[0, 0, 0]}
 				textAlign="center"
