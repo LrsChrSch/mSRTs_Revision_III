@@ -105,16 +105,10 @@ instr objectSoundTrig
   // set data
   iStructure1[] = iStructureMin_x
   iStructure2[] = iStructureMax_x
-  printarray(iStructure1)
-  printarray(iStructure2)
-  
+
   iScaleDivision1 = iMatrixCount^2; * iRotationRange
   iScaleDivision2 = iMatrixCount^2; * iScaleOffset
-  print(iScaleDivision1)
-  print(iScaleDivision2)
-  
   iRoot = giRoot * iMatrixCount
-  print(iRoot)
   iOctDown = 0
   iOctUp = 2
   iFreqs1[] structure_to_scale iScaleDivision1, iStructure1, iRoot,\
@@ -123,9 +117,6 @@ instr objectSoundTrig
     iOctDown, iOctUp
   iOffsets1[] array_offsets iFreqs1, 0.005
   iOffsets2[] array_offsets iFreqs2, 0.005
-
-  printarray(iFreqs1)
-  printarray(iOffsets1)
   
   // final signal data 
   iNoteSelection1[] = interleave(iFreqs1, iOffsets1) 
@@ -140,24 +131,9 @@ instr objectSoundTrig
   iEffectSendArr[] = fillarray(0, 1, 2, 1, 0, 2)
   iEffectCnt = giObjectCount % lenarray(iEffectSendArr)
   iChooseEffectSend = iEffectSendArr[iEffectCnt]
-
-
-  // printing for debugging
-  ;; print iNumOfNotes
-  ;; print(lenarray(iNoteSelection1))
-  ;; print(lenarray(iNoteSelection2))
-  ;; print(lenarray(iAmps1))
-  ;; print(lenarray(iAmps2))
-  ;; print(lenarray(iEffectSendAmount1))
-  ;; print(lenarray(iEffectSendAmount2))
-  ;; print iChooseEffectSend
-  ;; printarray(iFreqs1)
-  ;; printarray(iFreqs2)
-  ;; printarray(iNoteSelection1)
-  ;; printarray(iNoteSelection2)
   
   // call synth
-  iGain = db(-12)
+  iGain = db(-24)
   iCnt init 0
   while (iCnt < iNumOfNotes) do
 	schedule("objectSoundSig", 0, 60, iNoteSelection1[iCnt], \
@@ -251,6 +227,6 @@ endin
 
 instr objectSoundKill
   turnoff2("objectSoundSig", 0, 1)
-  turnoff2("envelope_generator", 0, 1)
+  ;;turnoff2("envelope_generator", 0, 1)
   turnoff
 endin
