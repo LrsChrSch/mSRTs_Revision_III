@@ -18,15 +18,14 @@
 	const size = 0.005;
 	const scale = 3;
 	const noise = 0.005;
-	const count = 1000000;
+	const count = 50000;
 
 	const geometry = new THREE.BoxGeometry(size, size, size);
-	const material = new THREE.MeshPhysicalMaterial({
+	const material = new THREE.MeshStandardMaterial({
 		color: '#e7e5e4'
 	});
 
 	const mesh = new THREE.InstancedMesh(geometry, material, count);
-
 	let groupRef: THREE.Group | undefined = $state();
 
 	async function loadSculpture(num: number) {
@@ -39,48 +38,43 @@
 			const decompressed = pako.inflate(compressedData);
 
 			// Convert the buffer back to the original format (Uint8Array)
-			const dataArray = Array.from(new Uint8Array(decompressed));
+			const dataArray = new Uint8Array(decompressed);
 
-			// Convert into 2D format (assuming 4 columns per row)
+			// Convert into 2D format (assuming 3 columns per row)
 			const numColumns = 3;
 
 			let maxSize = -1;
 			const average = new THREE.Vector3(0, 0, 0);
 			let total = 0;
-			const dummy = new THREE.Object3D();
+
+			// Reuse objects to avoid unnecessary allocations
+			const position = new THREE.Vector3();
+			const matrix = new THREE.Matrix4();
+			const quaternion = new THREE.Quaternion();
+			const scaleVector = new THREE.Vector3();
 
 			for (let i = 0; i < dataArray.length; i += numColumns) {
-				const data = dataArray.slice(i, i + numColumns);
+				position.set(dataArray[i] / 255, dataArray[i + 1] / 255, dataArray[i + 2] / 255);
 
-				let x = data[0] / 255;
-				let y = data[1] / 255;
-				let z = data[2] / 255;
+				position.multiplyScalar(2).subScalar(1);
+				position.addScalar((Math.random() - 0.5) * noise);
 
-				x = x * 2 - 1;
-				y = y * 2 - 1;
-				z = z * 2 - 1;
+				// scale value is 1.5 - distance of position from origin
+				const distance = position.length();
+				const scaleValue = 1.5 - distance;
+				scaleVector.set(scaleValue, scaleValue, scaleValue);
 
-				x += (Math.random() - 0.5) * noise;
-				y += (Math.random() - 0.5) * noise;
-				z += (Math.random() - 0.5) * noise;
-
-				dummy.position.set(x, y, z);
-				const distance = Math.sqrt(x * x + y * y + z * z);
-				dummy.scale.setScalar(1.5 - distance);
-				dummy.updateMatrix();
-
-				mesh.setMatrixAt(total, dummy.matrix);
+				matrix.compose(position, quaternion, scaleVector);
+				mesh.setMatrixAt(total, matrix);
 
 				// set maxSize to the length of the longest x and z vector
-				const length = Math.sqrt(x ** 2 + z ** 2);
-				maxSize = Math.max(maxSize, length);
-				average.add(dummy.position);
+				maxSize = Math.max(maxSize, distance);
+				average.add(position);
 
 				total++;
 			}
 
 			sculptureSize.set(maxSize);
-
 			average.divideScalar(total);
 
 			mesh.count = total;
@@ -88,16 +82,13 @@
 
 			// set the mesh position to 0,0,0
 			mesh.position.set(0, 0, 0);
-
 			mesh.position.sub(average.multiplyScalar(scale));
-
 			mesh.scale.setScalar(scale);
 			mesh.instanceMatrix.needsUpdate = true;
 
-			while (groupRef?.children.length) {
-				groupRef.remove(groupRef.children[0]);
+			if (groupRef && !groupRef.children.length) {
+				groupRef.add(mesh);
 			}
-			groupRef?.add(mesh);
 		} catch (error) {
 			console.error('Error loading the file:', error);
 		}
@@ -106,9 +97,6 @@
 	$effect(() => {
 		loadSculpture(index);
 	});
-
-	let rotation = $state(0);
-	// useTask((delta) => (rotation += delta * 0.05));
 
 	const groupSize = new Tween(1, {
 		duration: 500,
@@ -125,8 +113,7 @@
 	});
 </script>
 
-<T.Group frustumCulled={false} scale={groupSize.current} rotation.y={rotation} bind:ref={groupRef}
-></T.Group>
+<T.Group scale={groupSize.current} bind:ref={groupRef}></T.Group>
 
 <!-- Placeholder while animating-->
 <T.Mesh scale={1 - groupSize.current}>
