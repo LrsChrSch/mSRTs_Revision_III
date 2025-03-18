@@ -68,11 +68,11 @@ class SoundAdapter {
         // console.log("Csound File System:", filePaths);
 
 		await this.csound?.setOption("-d");
-		await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
+	 await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
 		await this.csound?.setOption("-odac");
 		//await this.csound?.setOption("-B512");
 		//await this.csound?.setOption("-b128");
-        await this.csound?.compileOrc("SR=44100\nksmps=128\n0dbfs=1\nnchnls=2\n" + csd);
+        await this.csound?.compileOrc("SR=44100\nksmps=16\n0dbfs=1\nnchnls=2\n" + csd);
     }
 
     async startSound() {
@@ -123,7 +123,14 @@ class SoundAdapter {
         // jsonData.transformMax (object with x, y, z values)
         // jsonData.seed (int)
 
-		// console.log(jsonData.matrixCount);
+		// console.log(jsonData.transformMax.x);
+		await this.csound?.setControlChannel('transformMin_x', jsonData.transformMin.x);
+		await this.csound?.setControlChannel('transformMin_y', jsonData.transformMin.y);
+		await this.csound?.setControlChannel('transformMin_z', jsonData.transformMin.z);
+		await this.csound?.setControlChannel('transformMax_x', jsonData.transformMax.x);
+		await this.csound?.setControlChannel('transformMax_y', jsonData.transformMax.y);
+		await this.csound?.setControlChannel('transformMax_z', jsonData.transformMax.z);
+		await this.csound?.setControlChannel('matrixCount', jsonData.matrixCount);
 		await this.csound?.setControlChannel('rotationRange', jsonData.rotationRange);
 		await this.csound?.setControlChannel('scaleOffset', jsonData.scaleOffset);
     }
@@ -187,6 +194,7 @@ class SoundAdapter {
         // it gets called every time a sculpture is loaded (approx.
 		// 750ms after an interaction) and reflects the amount of tiny
 		// cubes that are visible
+		// console.log(value);
 		await this.csound?.setControlChannel('numOfCubes', value);
     }
 	

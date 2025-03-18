@@ -261,3 +261,20 @@ opcode linear_scaling, i, iiiii
 
   xout iOutValue
 endop
+
+opcode extend_array, i[], i[]i
+  iInputArray[], iFinalLength xin
+
+  iOutArray[] init iFinalLength
+
+  iReadCnt init 0
+  iWriteCnt init 0
+  while (iWriteCnt < iFinalLength) do
+	iValue = iInputArray[iReadCnt % lenarray(iInputArray)]
+	iOutArray[iWriteCnt] = iValue
+	iReadCnt += 1
+	iWriteCnt += 1
+  od
+  
+  xout iOutArray
+endop
