@@ -1,423 +1,256 @@
 giObjectCount init 0
 
-instr prepare_objectSoundTrig
-  
-endin
-schedule("prepare_objectSoundTrig", 0, giGlobalTime)
-
 instr objectSoundTrig
-  // create numbers for strings
-  strset(0, "objectSound_1")
-  strset(1, "objectSound_2")
-  strset(2, "objectSound_3")
-  strset(3, "objectSound_4")
-
-  // create arrays for instrument calls
-  iInstrArr1[] = fillarray(0, 1, 2, 3, 1, 2, 0, 0, 3)
-  iInstrArr2[] = fillarray(3, 2, 1, 0, 2, 0)
-  iInstrArr1Length = lenarray(iInstrArr1)
-  iInstrArr2Length = lenarray(iInstrArr2)
-
-  // call isorhymtically instruments
-  iInstrCnt1 = giObjectCount % iInstrArr1Length
-  iInstrCnt2 = giObjectCount % iInstrArr2Length
-  iInstrNumber1 = iInstrArr1[iInstrCnt1]
-  iInstrNumber2 = iInstrArr2[iInstrCnt2]
-  S_instr_1 = strget(iInstrNumber1)
-  S_instr_2 = strget(iInstrNumber2)
-
-  // choose effect sends for instruments
-  iEffectSendArr1[] = fillarray(0, 1, 2, 1, 0, 2)
-  iEffectSendArr2[] = fillarray(0, 1, 2, 1, 0, 2, 0)
-  iEffectSendArr1Length = lenarray(iEffectSendArr1)
-  iEffetcSendArr2Length = lenarray(iEffectSendArr2)
-  iEffectCnt1 = giObjectCount % iEffectSendArr1Length
-  iEffectCnt2 = giObjectCount % iEffetcSendArr2Length
-  iEffectForInstr1 = iEffectSendArr1[iEffectCnt1]
-  iEffectForInstr2 = iEffectSendArr2[iEffectCnt2]
-
-  // choose wet only or not
-  iWetOnlyArr1[] = fillarray(0, 0, 0, 0, 1, 0, 1, 1)
-  iWetOnlyArr2[] = fillarray(0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1)
-  iWetOnlyArr1Length = lenarray(iWetOnlyArr1)
-  iWetOnlyArr2Length = lenarray(iWetOnlyArr2)
-  iWetOnlyCnt1 = giObjectCount % iWetOnlyArr1Length
-  iWetOnlyCnt2 = giObjectCount % iWetOnlyArr2Length
-  iWetOnlyForInstr1 = iWetOnlyArr1[iWetOnlyCnt1]
-  iWetOnlyForInstr2 = iWetOnlyArr2[iWetOnlyCnt2]
+  // browser data
+  iScaleOffset = i(gkScaleOffset)
+  iRotationRange = i(gkRotationRange)
+  iMatrixCount = i(gkMatrixCount)
+  iTransformMin_x = i(gkTransformMin_x)
+  iTransformMin_y = i(gkTransformMin_y)
+  iTransformMin_z = i(gkTransformMin_z)
+  iTransformMax_x = i(gkTransformMax_x)
+  iTransformMax_y = i(gkTransformMax_y)
+  iTransformMax_z = i(gkTransformMax_z)
   
-  schedule(S_instr_1, 0, 60, iEffectForInstr1, iWetOnlyForInstr1)
-  schedule(S_instr_2, 0, 60, iEffectForInstr2, iWetOnlyForInstr2)
-  schedule("envelope_generator", 0, 60)
+  // translate transformMin_x data to a scale structure 
+  S_TransformMin_x sprintf"%f", iTransformMin_x
+  S_TransformMin_x strsub S_TransformMin_x, 2, -1
+  iStructureMin_x[] init strlen:i(S_TransformMin_x)
+  iCntMinX init 0
+  while (strlen:i(S_TransformMin_x) > 0) do
+	S_CharMin_x strsub S_TransformMin_x, 0, 1
+	iValue = strtol:i(S_CharMin_x)
+	if (iValue != 0.0) then
+	  iStructureMin_x[iCntMinX] = iValue
+	endif
+	iCntMinX += 1
+	S_TransformMin_x strsub S_TransformMin_x, 1, -1
+  od
+
+  // translate transformMin_y data to amplitude data
+  S_TransformMin_y sprintf "%f", iTransformMin_y
+  S_TransformMin_y strsub S_TransformMin_y, 2, -1
+  iAmpMin_y[] init strlen:i(S_TransformMin_y)
+  iCntMinY init 0
+  while (strlen:i(S_TransformMin_y) > 0) do
+	S_CharMin_y strsub S_TransformMin_y, 0, 1
+	iValue = strtol:i(S_CharMin_y)
+	if (iValue != 0.0) then
+	  iAmpMin_y[iCntMinY] = iValue / 10 
+	endif
+	iCntMinY += 1
+	S_TransformMin_y strsub S_TransformMin_y, 1, -1
+  od
+
+  // translate transformMin_z data to effect send amount
+  S_TransformMin_z sprintf "%f", iTransformMin_z
+  S_TransformMin_z strsub S_TransformMin_z, 2, -1
+  iEffectSendMin_z[] init strlen:i(S_TransformMin_z)
+  iCntMinZ init 0
+  while (strlen:i(S_TransformMin_z) > 0) do
+	S_CharMin_z strsub S_TransformMin_z, 0, 1
+	iValue = strtol:i(S_CharMin_z)
+	if (iValue != 0.0) then
+	  iEffectSendMin_z[iCntMinZ] = iValue / 10 
+	endif
+	iCntMinZ += 1
+	S_TransformMin_z strsub S_TransformMin_z, 1, -1
+  od
+
+  // translate transformMax_x data to a scale structure 
+  S_TransformMax_x sprintf "%f", iTransformMax_x
+  S_TransformMax_x strsub S_TransformMax_x, 2, -1
+  iStructureMax_x[] init strlen:i(S_TransformMax_x)
+  iCntMaxX init 0
+  while (strlen:i(S_TransformMax_x) > 0) do
+	S_CharMax_x strsub S_TransformMax_x, 0, 1
+	iValue = strtol:i(S_CharMax_x)
+	if (iValue != 0.0) then
+	  iStructureMax_x[iCntMaxX] = iValue
+	endif
+	iCntMaxX += 1
+	S_TransformMax_x strsub S_TransformMax_x, 1, -1
+  od
+
+  // translate transformMax_y data to amplitude data
+  S_TransformMax_y sprintf "%f", iTransformMax_y
+  S_TransformMax_y strsub S_TransformMax_y, 2, -1
+  iAmpMax_y[] init strlen:i(S_TransformMax_y)
+  iCntMaxY init 0
+  while (strlen:i(S_TransformMax_y) > 0) do
+	S_CharMax_y strsub S_TransformMax_y, 0, 1
+	iValue = strtol:i(S_CharMax_y)
+	if (iValue != 0.0) then
+	  iAmpMax_y[iCntMaxY] = iValue / 10 
+	endif
+	iCntMaxY += 1
+	S_TransformMax_y strsub S_TransformMax_y, 1, -1
+  od
+
+  // translate transformMax_z data to effect send amount
+  S_TransformMax_z sprintf "%f", iTransformMax_z
+  S_TransformMax_z strsub S_TransformMax_z, 2, -1
+  iEffectSendMax_z[] init strlen:i(S_TransformMax_z)
+  iCntMaxZ init 0
+  while (strlen:i(S_TransformMax_z) > 0) do
+	S_CharMax_z strsub S_TransformMax_z, 0, 1
+	iValue = strtol:i(S_CharMax_z)
+	if (iValue != 0.0) then
+	  iEffectSendMax_z[iCntMaxZ] = iValue / 10 
+	endif
+	iCntMaxZ += 1
+	S_TransformMax_z strsub S_TransformMax_z, 1, -1
+  od
+  
+  // set data
+  iStructure1[] = iStructureMin_x
+  iStructure2[] = iStructureMax_x
+  printarray(iStructure1)
+  printarray(iStructure2)
+  
+  iScaleDivision1 = iMatrixCount^2; * iRotationRange
+  iScaleDivision2 = iMatrixCount^2; * iScaleOffset
+  print(iScaleDivision1)
+  print(iScaleDivision2)
+  
+  iRoot = giRoot * iMatrixCount
+  print(iRoot)
+  iOctDown = 0
+  iOctUp = 2
+  iFreqs1[] structure_to_scale iScaleDivision1, iStructure1, iRoot,\
+    iOctDown, iOctUp
+  iFreqs2[] structure_to_scale iScaleDivision2, iStructure2, iRoot,\
+    iOctDown, iOctUp
+  iOffsets1[] array_offsets iFreqs1, 0.005
+  iOffsets2[] array_offsets iFreqs2, 0.005
+
+  printarray(iFreqs1)
+  printarray(iOffsets1)
+  
+  // final signal data 
+  iNoteSelection1[] = interleave(iFreqs1, iOffsets1) 
+  iNoteSelection2[] = interleave(iFreqs2, iOffsets2)
+  iNumOfNotes = lenarray(iNoteSelection1)
+  iAmps1[] = extend_array(iAmpMin_y, iNumOfNotes)
+  iAmps2[] = extend_array(iAmpMax_y, iNumOfNotes)
+  iEffectSendAmount1[] = extend_array(iEffectSendMin_z, iNumOfNotes)
+  iEffectSendAmount2[] = extend_array(iEffectSendMax_z, iNumOfNotes)
+
+  // choose effect send
+  iEffectSendArr[] = fillarray(0, 1, 2, 1, 0, 2)
+  iEffectCnt = giObjectCount % lenarray(iEffectSendArr)
+  iChooseEffectSend = iEffectSendArr[iEffectCnt]
+
+
+  // printing for debugging
+  ;; print iNumOfNotes
+  ;; print(lenarray(iNoteSelection1))
+  ;; print(lenarray(iNoteSelection2))
+  ;; print(lenarray(iAmps1))
+  ;; print(lenarray(iAmps2))
+  ;; print(lenarray(iEffectSendAmount1))
+  ;; print(lenarray(iEffectSendAmount2))
+  ;; print iChooseEffectSend
+  ;; printarray(iFreqs1)
+  ;; printarray(iFreqs2)
+  ;; printarray(iNoteSelection1)
+  ;; printarray(iNoteSelection2)
+  
+  // call synth
+  iGain = db(-12)
+  iCnt init 0
+  while (iCnt < iNumOfNotes) do
+	schedule("objectSoundSig", 0, 60, iNoteSelection1[iCnt], \
+	  iNoteSelection2[iCnt], iAmps1[iCnt], iAmps2[iCnt],\
+	  iEffectSendAmount1[iCnt], iEffectSendAmount2[iCnt], \
+	  iChooseEffectSend, iGain)  
+	iCnt += 1
+  od
   giObjectCount += 1
-  turnoff
+  turnoff 
+endin
+
+;; instr envelope_generator
+;;   kTrig = changed(gkCameraX)
+;;   schedkwhen(kTrig, 0, 1, "envelope_generator_env", 0, .1)
+;; endin
+
+;; gaEnvelopeGen init 0
+;; instr envelope_generator_env ;; amount of percussivness in sound
+;;   // object data
+;;   iRotation = i(gkRotationRange)
+;;   iScale = i(gkScaleOffset)
+
+;;   // envelope data
+;;   iMaxDur = 2
+;;   iMinDur = 0.1 
+;;   iDur = linear_scaling(iScale, 0, 1, iMinDur, iMaxDur)
+;;   iDur *= random:i(0.75, 1.25)
+;;   p3 = iDur
+
+
+;;   iStartEndVol = 0
+;;   iAtt = linear_scaling(iScale, 0, 1, iDur * 0.05, iDur * 0.1)
+;;   iDec = linear_scaling(iScale, 0, 1, iDur * 0.1, iDur * 0.2)
+;;   iRel = linear_scaling(iScale, 0, 1, iDur * 0.15, iDur * 0.25)
+;;   iSusTime = iDur - (iAtt + iDec + iRel)
+;;   iSusLvl = linear_scaling(iRotation, 0, 1, 0.25, 1)
+  
+;;   gaEnvelopeGen = linsegr(iStartEndVol, iAtt, 1, iDec, iSusLvl,
+;; 	iSusTime, iSusLvl, iRel, iStartEndVol)
+;; endin
+
+
+instr objectSoundSig
+  // p-field data
+  iFreqStart = p4
+  iFreqEnd = p5
+  iAmpStart = p6
+  iAmpEnd = p7
+  iEffectSendAmountStart = p8
+  iEffectSendAmountEnd = p9
+  iChooseEffectSend = p10
+  iGain = p11
+  
+  // signal
+  aFreq = line(iFreqStart, p3, iFreqEnd)
+  aAmp = line(iAmpStart, p3, iAmpEnd)
+  aSig = poscil3(aAmp, aFreq) 
+  aSig *= iGain
+  // envelope
+  iAtt = random:i(2, 4)
+  iRel = iAtt
+  iSusTime = p3 - (iAtt + iRel)
+  aEnv linsegr 0, iAtt, 1, iSusTime, 1, iRel, 0
+  aSig *= aEnv
+
+
+  // panning
+  aSig1, aSig2 pan2 aSig, random:i(0,1) 
+
+  // effect send
+  aEffectSendAmount = line(iEffectSendAmountStart, p3, iEffectSendAmountEnd)
+  if (iChooseEffectSend == 0) then 
+	// reverb send
+	gaReverbBus[0] = (aEffectSendAmount * aSig1) + gaReverbBus[0]
+	gaReverbBus[1] = (aEffectSendAmount * aSig2) + gaReverbBus[1]
+  elseif (iChooseEffectSend == 1) then
+	// delay send
+	gaDelBus[0] = (aEffectSendAmount * aSig1) + gaDelBus[0]
+	gaDelBus[1] = (aEffectSendAmount * aSig2) + gaDelBus[1]
+  elseif (iChooseEffectSend == 2) then 
+	// resonatore send
+	gaResonatorBus[0] = (aEffectSendAmount * aSig1) + gaResonatorBus[0]
+	gaResonatorBus[1] = (aEffectSendAmount * aSig2) + gaResonatorBus[1]
+  endif 
+
+  // master send
+  gaMasterBus[0] = gaMasterBus[0] + ((1 - aEffectSendAmount) * aSig1)
+  gaMasterBus[1] = gaMasterBus[1] + ((1 - aEffectSendAmount) * aSig2)
 endin
 
 instr objectSoundKill
-  turnoff2("objectSound_1", 0, 1)
-  turnoff2("objectSound_2", 0, 1)
-  turnoff2("objectSound_3", 0, 1)
-  turnoff2("objectSound_4", 0, 1)
+  turnoff2("objectSoundSig", 0, 1)
   turnoff2("envelope_generator", 0, 1)
   turnoff
 endin
-
-instr envelope_generator
-  kTrig = changed(gkCameraX)
-  schedkwhen(kTrig, 0, 1, "envelope_generator_env", 0, .1)
-endin
-
-gaEnvelopeGen init 0
-instr envelope_generator_env ;; amount of percussivness in sound
-  // object data
-  iRotation = i(gkRotationRange)
-  iScale = i(gkScaleOffset)
-
-  // envelope data
-  iMaxDur = 2
-  iMinDur = 0.1 
-  iDur = linear_scaling(iScale, 0, 1, iMinDur, iMaxDur)
-  iDur *= random:i(0.75, 1.25)
-  p3 = iDur
-
-
-  iStartEndVol = 0
-  iAtt = linear_scaling(iScale, 0, 1, iDur * 0.05, iDur * 0.1)
-  iDec = linear_scaling(iScale, 0, 1, iDur * 0.1, iDur * 0.2)
-  iRel = linear_scaling(iScale, 0, 1, iDur * 0.15, iDur * 0.25)
-  iSusTime = iDur - (iAtt + iDec + iRel)
-  iSusLvl = linear_scaling(iRotation, 0, 1, 0.25, 1)
-  
-  gaEnvelopeGen = linsegr(iStartEndVol, iAtt, 1, iDec, iSusLvl,
-	iSusTime, iSusLvl, iRel, iStartEndVol)
-endin
-
-instr objectSound_1 ;; sine beatings
-  // browser data
-  kCameraX = port(gkCameraX, 0.125)
-  kCameraY = port(gkCameraY, 0.125)
-  
-  kFreq = giRoot * 12
-  kBeatings = 0.125 + (kCameraY * 5) 
-  kFreq1 = kFreq - (kBeatings / 2)
-  kFreq2 = kFreq + (kBeatings / 2)
-
-  kAmp = db(-8)
-  aSine1 = poscil(kAmp, kFreq1)
-  aSine2 = poscil(kAmp, kFreq2)
-  aSum = sum(aSine1, aSine2)
-
-  // envelope
-  iAtt = random(1, 4)
-  iDec = iAtt
-  iSusTime = p3 - (iAtt + iDec)
-  aEnv = linsegr(0, iAtt, 1, iSusTime, 1, 1, 0)
-  aSum *= aEnv
-
-  // modulation
-  iRingFreq = (giRoot * 12) / ((p4 % 10) + 1)
-  aRing = poscil(1, iRingFreq)
-  k1 = 1 / ((p4 % 8) + 1)
-  k2 = 1 / ((p4 % 5) + 1)
-  k3 = 1 / ((p4 % 5) + 1)
-  k4 = 1 / ((p4 % 3) + 1)
-  aRing1 = chebyshevpoly(aRing, k1 * kCameraX, k2 * kCameraY, k3 * kCameraX, k4)
-  aSum *= aRing1
-
-  ;; aRing2 = randi(1, iRingFreq)
-  ;; aSum *= aRing2
-    // amp modulation
-  aAmpMod = rspline(0.5, 1, 0.125, 1)
-  aSum *= aAmpMod
-  
-  // envelope_generator
-  aSum *= gaEnvelopeGen
-  
-  // phaser
-  aSum = phaser1(aSum, giRoot, 64, 0.85)
-  
-  // panning
-  aSig1, aSig2 pan2 aSum, kCameraX
-
-  // wet only via p5
-  if (p5 == 1) then
-	iWetOnly = 0
-  else
-	iWetOnly = 1
-  endif
-  
-  // choose effect send via p4
-  if (p4 == 0) then 
-	// reverb send
-	iRevAmount = db(-18) + (iWetOnly * db(-3))
-	gaReverbBus[0] = (iRevAmount * aSig1) + gaReverbBus[0]
-	gaReverbBus[1] = (iRevAmount * aSig2) + gaReverbBus[1]
-  elseif (p4 == 1) then
-	// delay send
-	iDelAmount = db(-18) + (iWetOnly * db(-3))
-	gaDelBus[0] = (iDelAmount * aSig1) + gaDelBus[0]
-	gaDelBus[1] = (iDelAmount * aSig2) + gaDelBus[1]
-  elseif (p4 == 2) then 
-	// resonatore send
-	iResonAmount = db(-18) + (iWetOnly * db(-3))
-	gaResonatorBus[0] = (iResonAmount * aSig1) + gaResonatorBus[0]
-	gaResonatorBus[1] = (iResonAmount * aSig2) + gaResonatorBus[1]
-  endif 
-
-  // master send
-  iMasterSend = db(-14)
-  iMasterSend *= iWetOnly
-  gaMasterBus[0] = gaMasterBus[0] + (iMasterSend * aSig1)
-  gaMasterBus[1] = gaMasterBus[1] + (iMasterSend * aSig2)
-endin
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; gaObjectSound_2_triggerEnv init 0
-
-;; instr objectSound_2
-;;   schedule("objectSound_2_sound", 0, p3, p4)
-;;   kTrig = changed(gkCameraX)
-;;   schedkwhen(kTrig, 0, 1, "objectSound_2_triggerEnv", 0,
-;; 	random:k(0.0625, 0.25))
-;; endin
-
-;; instr objectSound_2_triggerEnv
-;;   gaObjectSound_2_triggerEnv = expseg(0.00001, 0.01, 1, 0.25, 0.00001)
-;; endin
-
-instr objectSound_2 ;; fm
-  kCameraX = port(gkCameraX, 0.125)
-  kCameraY = port(gkCameraY, 0.125)
-  // modulator
-  kIndex = gaEnvelopeGen * (p4 % 20)
-  kModFreq = giRoot * (3 * (1 + kCameraX))
-  kModDeviation = kIndex * 10 
-  aMod = poscil(kModDeviation, kModFreq)
-
-  // carrier
-  kAmp = db(-6)
-  kFreq = giRoot * (4 * (0.25 + kCameraX))
-  aCar = poscil(kAmp, kFreq + aMod)
-  aSum = aCar
-
-  ;; // ring mod
-  ;; iRingFreq = (giRoot * 12) / ((p4 % 10) + 1)
-  ;; aRing = randi(1, giRoot *10)
-  ;; aSum *= aRing
-
-  // phaser
-  aSum = phaser1(aSum, giRoot * 10, 16, -0.9)
-  
-  
-  // envelope
-  iAtt = random(1, 4)
-  iDec = iAtt
-  iSusTime = p3 - (iAtt + iDec)
-  aEnv = linsegr(0, iAtt, 1, iSusTime, 1, 1, 0)
-  aSum *= aEnv
-
-  // amp modifikation
-  aAmpMod = rspline(0, 1, 0.125, 0.25)
-  aSum *= aAmpMod
-
-  // envelope_generator
-  aSum *= gaEnvelopeGen
-
-  // delay
-  aDelTime = rspline(0.03, 1, 0.125, 5)
-  aDel = vdelay(aSum, aDelTime, 2)
-  aSum = sum(aDel, aSum)
-  
-  // panning
-  aSig1, aSig2 pan2 aSum, kCameraX
-  
-  // wet only via p5
-  if (p5 == 1) then
-	iWetOnly = 0
-  else
-	iWetOnly = 1
-  endif
-  
-  // choose effect send via p4
-  if (p4 == 0) then 
-	// reverb send
-	iRevAmount = db(-18) + (iWetOnly * db(-3))
-	gaReverbBus[0] = (iRevAmount * aSig1) + gaReverbBus[0]
-	gaReverbBus[1] = (iRevAmount * aSig2) + gaReverbBus[1]
-  elseif (p4 == 1) then
-	// delay send
-	iDelAmount = db(-18) + (iWetOnly * db(-3))
-	gaDelBus[0] = (iDelAmount * aSig1) + gaDelBus[0]
-	gaDelBus[1] = (iDelAmount * aSig2) + gaDelBus[1]
-  elseif (p4 == 2) then 
-	// resonator send
-	iResonAmount = db(-18) + (iWetOnly * db(-3))
-	gaResonatorBus[0] = (iResonAmount * aSig1) + gaResonatorBus[0]
-	gaResonatorBus[1] = (iResonAmount * aSig2) + gaResonatorBus[1]
-  endif 
-
-  // master send
-  iMasterSend = db(-14)
-  iMasterSend *= iWetOnly
-  gaMasterBus[0] = gaMasterBus[0] + (iMasterSend * aSig1)
-  gaMasterBus[1] = gaMasterBus[1] + (iMasterSend * aSig2)  
-endin
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; gaObjectSound_3_triggerEnv init 0
-;; instr objectSound_3
-;;   schedule("objectSound_3_sound", 0, p3, p4)
-;;   kTrig = changed(gkCameraX)
-;;   schedkwhen(kTrig, 0, 1, "objectSound_3_triggerEnv", 0,
-;; 	random:k(0.125, 0.5))
-;; endin
-
-;; instr objectSound_3_triggerEnv
-;;   gaObjectSound_3_triggerEnv = expseg(0.00001, 0.25, 1, 0.1, 0.00001)
-;; endin
-
-instr objectSound_3 ;; rhythmic noise
-  // data from browser
-  kCameraX = port(gkCameraX, 0.125)
-  kCameraY = port(gkCameraY, 0.125)
-  iNumOfCubes = p4
-
-  // noise
-  kBeta = 0.75
-  aNoiseAmp = db(-12)
-  aNoise1 = noise(aNoiseAmp, kBeta)
-  aNoise2 = noise(aNoiseAmp, -kBeta)
-
-  // ring mod
-  iRingFreq = (giRoot * 12) / ((p4 % 10) + 1)
-  aRing = randi(1, iRingFreq)
-  aSig1 = aNoise1 * aRing
-  aSig2 = aNoise2 * aRing
-
-  // delay slurr
-  aDelIn = sum(aSig1, aSig2)
-  kDelTime = kCameraY + 0.3 
-  kFdbk = kCameraX 
-  aDUMP delayr 2
-  aDelOut deltap kDelTime
-  delayw aDelIn + (aDelOut * kFdbk)
-  
-  ;; // amp env
-
-
-  // adding the delay
-  aSig1 = sum(aSig1, aDelOut)
-  aSig2 = sum(aSig2, aDelOut)
-
-  // envelope_generator
-  aSig1 *= gaEnvelopeGen
-  aSig2 *= gaEnvelopeGen
-  
-  // gain
-  iGain = db(-20)
-  aSig1 *= iGain
-  aSig2 *= iGain
-
-  // wet only via p5
-  if (p5 == 1) then
-	iWetOnly = 0
-  else
-	iWetOnly = 1
-  endif
-  
-  // choose effect send via p4
-  if (p4 == 0) then 
-	// reverb send
-	iRevAmount = db(-18) + (iWetOnly * db(-3))
-	gaReverbBus[0] = (iRevAmount * aSig1) + gaReverbBus[0]
-	gaReverbBus[1] = (iRevAmount * aSig2) + gaReverbBus[1]
-  elseif (p4 == 1) then
-	// delay send
-	iDelAmount = db(-18) + (iWetOnly * db(-3))
-	gaDelBus[0] = (iDelAmount * aSig1) + gaDelBus[0]
-	gaDelBus[1] = (iDelAmount * aSig2) + gaDelBus[1]
-  elseif (p4 == 2) then 
-	// resonator send
-	iResonAmount = db(-18) + (iWetOnly * db(-3))
-	gaResonatorBus[0] = (iResonAmount * aSig1) + gaResonatorBus[0]
-	gaResonatorBus[1] = (iResonAmount * aSig2) + gaResonatorBus[1]
-  endif 
-  
-  // master send
-  iMasterSend = db(-8)
-  iMasterSend *= iWetOnly
-  gaMasterBus[0] = gaMasterBus[0] + (aSig1 * iMasterSend)
-  gaMasterBus[1] = gaMasterBus[1] + (aSig2 * iMasterSend)
-endin
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-instr objectSound_4 ;; karplus strong clicks
-  // data from browser
-  kCameraX = port(gkCameraX, 0.125)
-  kCameraY = port(gkCameraY, 0.125)
-
-  // click
-  kClickAmp = db(-0.3)
-  kClickFreq = 1 - kCameraX
-  aClick = mpulse(kClickAmp, kClickFreq)
-
-  // delay slurr
-  aDelIn = aClick
-  kDelTime1 = scale(kCameraX, 0.08, 0.01, 1, 0)
-  kFdbk1 = -0.85
-  aDUMP1 delayr 2
-  aDelOut1 deltap kDelTime1
-  delayw aDelIn + (aDelOut1 * kFdbk1)
-
-  kDelTime2 = kDelTime1 + 0.02
-  kFdbk2 =  kFdbk1
-  aDUMP2 delayr 2
-  aDelOut2 deltap kDelTime2
-  delayw aDelIn + (aDelOut2 * kFdbk2)
-
-  // amp env
-  iAtt = random(1, 2)
-  iRel = iAtt
-  iSusTime = p3 - (iAtt + iRel)
-  aEnv = linsegr(0, iAtt, 1, iSusTime, 1, iRel, 0)
-  aDelOut1 *= aEnv
-  aDelOut2 *= aEnv
-  
-  // gain
-  iGain = db(-16)
-  aDelOut1 *= iGain
-  aDelOut2 *= iGain
-
-  aSig1 = aDelOut1
-  aSig2 = aDelOut2
-
-  // wet only via p5
-  if (p5 == 1) then
-	iWetOnly = 0
-  else
-	iWetOnly = 1
-  endif
-  
-  // choose effect send via p4
-  if (p4 == 0) then 
-	// reverb send
-	iRevAmount = db(-18) + (iWetOnly * db(-3))
-	gaReverbBus[0] = (iRevAmount * aSig1) + gaReverbBus[0]
-	gaReverbBus[1] = (iRevAmount * aSig2) + gaReverbBus[1]
-  elseif (p4 == 1) then
-	// delay send
-	iDelAmount = db(-18) + (iWetOnly * db(-3))
-	gaDelBus[0] = (iDelAmount * aSig1) + gaDelBus[0]
-	gaDelBus[1] = (iDelAmount * aSig2) + gaDelBus[1]
-  elseif (p4 == 2) then 
-	// resonator send
-	iResonAmount = db(-18) + (iWetOnly * db(-3))
-	gaResonatorBus[0] = (iResonAmount * aSig1) + gaResonatorBus[0]
-	gaResonatorBus[1] = (iResonAmount * aSig2) + gaResonatorBus[1]
-  endif 
-
-  // master send
-  iMasterSend = db(-8)
-  iMasterSend *= iWetOnly
-  gaMasterBus[0] = gaMasterBus[0] + (aSig1 * iMasterSend)
-  gaMasterBus[1] = gaMasterBus[1] + (aSig2 * iMasterSend)
-endin
-
-

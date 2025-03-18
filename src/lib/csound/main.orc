@@ -44,14 +44,21 @@ instr getDataFromBrowser
   gkAdditivStructFiltCf = port(kCursorPosYHandler, 0.25)
   kCursorPosXHandler = chnget:k("cursorPosXHandler")
   gkSubBeatings = port(kCursorPosXHandler, 0.25)
-  gkNumOfCubes = chnget:k("numOfCubes")
   gkCameraX = chnget:k("camera_x")
-  ;;gkCameraX = port(abs(kCameraX), 0.25)
   gkCameraY = chnget:k("camera_y")
-  ;;  gkCameraY = port(abs(kCameraY), 0.25)
-  gkRotationRange = chnget:k("rotationRange")
-  gkScaleOffset = chnget:k("scaleOffset")
-  
+
+  // data for object sounds
+  gkNumOfCubes = chnget:k("numOfCubes")     ; ~10000 - ~20000
+  gkTransformMin_x = chnget:k("transformMin_x") ; 0 - 1
+  gkTransformMin_y = chnget:k("transformMin_y") ; 0 - 1
+  gkTransformMin_z = chnget:k("transformMin_z") ; 0 - 1
+  gkTransformMax_x = chnget:k("transformMax_x") ; 0 - 1
+  gkTransformMax_y = chnget:k("transformMax_y") ; 0 - 1
+  gkTransformMax_z = chnget:k("transformMax_z") ; 0 - 1
+  gkMatrixCount = chnget:k("matrixCount")   ; 3 - 5
+  gkRotationRange = chnget:k("rotationRange") ; 0 - 1
+  gkScaleOffset = chnget:k("scaleOffset") ; 0 - 1
+
   // event data
   kHovered = chnget:k("hovered")
   schedkwhen(kHovered, 1, 1, "ducker", 0, 60)
@@ -110,8 +117,8 @@ instr delayBus
   clear(gaDelBus)
 
   // delay
-  kDelTime1 = 0.3
-  kFdbk1 = 0.5
+  kDelTime1 = 0.03
+  kFdbk1 = 0.75
   aDUMP1 delayr 5
   aDelOut1 = deltap3(kDelTime1)
   delayw(aDelIn1 + (aDelOut1 * kFdbk1))
