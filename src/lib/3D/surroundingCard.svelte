@@ -5,14 +5,7 @@
 
 	import { Billboard, ImageMaterial, Text, useCursor } from '@threlte/extras';
 	import * as THREE from 'three';
-	import {
-		invalidateSurrounding,
-		linePoints,
-		lineSlicer,
-		origin,
-		sculptureIndex,
-		textSlicer
-	} from './stores.svelte';
+	import { invalidateSurrounding, linePoints, origin, sculptureIndex } from './stores.svelte';
 	import { Tween } from 'svelte/motion';
 	import { T } from '@threlte/core';
 	import { cubicInOut } from 'svelte/easing';
@@ -95,13 +88,6 @@
 			linePoints.addPoints(newOrigin);
 			origin.set(newOrigin);
 
-			textSlicer.set(0, {
-				delay: 0
-			});
-			lineSlicer.set(0, {
-				delay: 500
-			});
-
 			soundAdapter.transitionStartedInteraction();
 
 			setTimeout(() => {
@@ -109,15 +95,6 @@
 
 				pointData.regenerate();
 			}, 750);
-
-			setTimeout(() => {
-				textSlicer.set(1, {
-					delay: 500
-				});
-				lineSlicer.set(1, {
-					delay: 0
-				});
-			}, 2500);
 		}}
 		position={[position[0] * distance, position[1] * distance, position[2] * distance]}
 		scale={size.current}

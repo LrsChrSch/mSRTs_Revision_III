@@ -14,12 +14,8 @@
 		NoiseEffect,
 		BlendFunction,
 		TiltShiftEffect,
-		PixelationEffect,
-		DepthOfFieldEffect,
-		GridEffect,
 		BloomEffect,
-		LensDistortionEffect,
-		ShockWaveEffect
+		LensDistortionEffect
 	} from 'postprocessing';
 	import * as THREE from 'three';
 	import type { Camera } from 'three';

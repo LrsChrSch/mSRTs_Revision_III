@@ -133,7 +133,7 @@
 		<LockedBillboard position={[wordPos, 0, 0]} lockZ={true} lockY={true}>
 			<Text
 				color="#d6d3d1"
-				anchorX="left"
+				anchorX="right"
 				anchorY="middle"
 				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}
@@ -149,7 +149,7 @@
 		<LockedBillboard position={[-wordPos, 0, 0]} lockZ={true} lockY={true}>
 			<Text
 				color="#d6d3d1"
-				anchorX="right"
+				anchorX="left"
 				anchorY="middle"
 				font="/fonts/SuisseIntlMono-Regular.otf"
 				position={[0, 0, 0]}

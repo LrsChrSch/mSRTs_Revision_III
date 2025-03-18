@@ -9,7 +9,6 @@
 	import { Tween } from 'svelte/motion';
 	import { cubicInOut } from 'svelte/easing';
 	import * as THREE from 'three';
-	import NameLine from './nameLine.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import Sculpture from './sculpture.svelte';
 	import { soundAdapter } from '$lib/csound.svelte';
@@ -151,8 +150,6 @@
 
 <TrackingLine />
 <Crosshair />
-
-<!--  <NameLine origin={targetTween.current} {screenPosition} /> -->
 
 <Surrounding />
 
