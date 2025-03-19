@@ -165,11 +165,11 @@ instr objectSoundSig
 
   // camera distance mod
   aSig *= 2 - gkCameraDistance ; amplitude mod
-
+  ;; filter mod
   kCf = 17000 - (gkCameraDistance * 10500)
-  aSig = butterlp(aSig, kCf) ; filter mod
-
-  kDistanceRev = 1.7 - gkCameraDistance
+  aSig = butterlp(aSig, kCf) 
+  ;; reverb send mod 
+  kDistanceRev = 1.7 - gkCameraDistance 
   gaReverbBus[0] = (kDistanceRev * aSig) + gaReverbBus[0]
   gaReverbBus[1] = (kDistanceRev * aSig) + gaReverbBus[1]
 
@@ -180,7 +180,6 @@ instr objectSoundSig
   iSusTime = p3 - (iAtt + iRel)
   aEnv linsegr 0, iAtt, 1, iSusTime, 1, iRel, 0
   aSig *= aEnv
-
 
   // panning
   aSig1, aSig2 pan2 aSig, random:i(0,1) 
@@ -208,6 +207,5 @@ endin
 
 instr objectSoundKill
   turnoff2("objectSoundSig", 0, 1)
-  ;;turnoff2("envelope_generator", 0, 1)
   turnoff
 endin

@@ -23,6 +23,10 @@ instr getDataFromBrowser
   kCursorPosYHandler = chnget:k("cursorPosYHandler")
   gkAdditivStructFiltCf = port(kCursorPosYHandler, 0.25)
   kCursorPosXHandler = chnget:k("cursorPosXHandler")
+
+  
+  kCursorAcceleration = changek((kCursorPosYHandler + kCursorPosXHandler)  / 1.5)
+  gkCursorAcceleration = port(kCursorAcceleration, 0.25)
   gkSubBeatings = port(kCursorPosXHandler, 0.25)
   gkCameraX = chnget:k("camera_x")
   gkCameraY = chnget:k("camera_y")
@@ -38,7 +42,7 @@ instr getDataFromBrowser
   gkMatrixCount = chnget:k("matrixCount")   ; 3 - 5
   gkRotationRange = chnget:k("rotationRange") ; 0 - 1
   gkScaleOffset = chnget:k("scaleOffset") ; 0 - 1
-  kCameraDistance = chnget:k("cameraDistance") ; 0 - 1
+  kCameraDistance = chnget:k("cameraDistance") ; ~0.6 - ~1.7
   gkCameraDistance = port(kCameraDistance, 0.125)
   
   // event data
@@ -57,6 +61,7 @@ schedule("getDataFromBrowser", 0, giGlobalTime)
 instr main
   schedule("additivStruct", 0, giGlobalTime)
   schedule("subBeatings", 0, giGlobalTime)
+  schedule("cursorSound", 0, giGlobalTime)
   turnoff
 endin
 schedule("main", 0, 1)
@@ -66,6 +71,41 @@ schedule("main", 0, 1)
 #include "./hoveredSound.csd"
 #include "./transitionSound.csd"
 #include "./objectSound.csd"
+instr cursorSound
+
+
+  iAmp = db(-6)
+  iBaseFreq = giRoot * 2
+  kEnvFreq = randomi(1, 8, 1)
+  aEnvFreqSig = loopxseg(kEnvFreq, 0, 0, 4, 0.05, 1.4, 0.2, 1, 0.75,
+	1, 0)
+  aEnvAmpSig = loopxseg(kEnvFreq, 0, 0, 0.001, 0.01, 1, 0.05, 0.75, 0.25, 0.001, 0.69,
+	0.001, 0)
+  aEnvAmpSub = loopxseg(kEnvFreq, 0, 0, 0.001, 0.01, 1, 0.99,
+	0.001, 0)
+  aFreq = iBaseFreq * aEnvFreqSig
+  aSig = poscil(iAmp * aEnvAmpSig, aFreq) 
+  aSub = poscil(iAmp * aEnvAmpSub, aFreq * 0.25) 
+
+
+  aOut = sum(aSig, aSub)
+  aOut *= gkCursorAcceleration
+
+  // main env
+  iAtt = 2
+  iRel = 2
+  iSusTime = p3 - (iAtt + iRel)
+  aEnv = linseg(0, iAtt, 1, iSusTime, 1, iRel, 0)
+  aOut *= aEnv
+  
+  // reverb send
+  gaReverbBus[0] = gaReverbBus[0] + (aOut * 0.25)
+  gaReverbBus[1] = gaReverbBus[1] + (aOut * 0.25)
+
+  // master send
+  gaMasterBus[0] = gaMasterBus[0] + aOut
+  gaMasterBus[1] = gaMasterBus[1] + aOut
+endin
 
 instr resonatorBus
   // resonator input

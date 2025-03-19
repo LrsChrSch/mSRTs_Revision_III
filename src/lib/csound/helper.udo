@@ -278,3 +278,15 @@ opcode extend_array, i[], i[]i
   
   xout iOutArray
 endop
+
+opcode changek, k, k
+  kIn xin
+
+  ;; the differnce from the actual k value and the k value delayed by
+  ;; iSampleTime is kChange
+  iSampleTime = 0.1
+  kPrevious delayk  kIn, iSampleTime
+  kChange  = kIn - kPrevious
+  
+  xout abs(kChange)
+endop

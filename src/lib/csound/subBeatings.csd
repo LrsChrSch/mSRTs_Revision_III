@@ -1,7 +1,7 @@
 instr subBeatings
   // sub beatings
   kBeatings = (abs(gkSubBeatings - 0.5) * 10 ) + 0.25
-  kAmp = db(-36)
+  kAmp = db(-24)
   kFreq = giRoot * 2^(7/12) 
   kFreq1 = kFreq + (kBeatings / 2)
   kFreq2 = kFreq - (kBeatings / 2)
