@@ -58,7 +58,9 @@ instr getDataFromBrowser
   gkMatrixCount = chnget:k("matrixCount")   ; 3 - 5
   gkRotationRange = chnget:k("rotationRange") ; 0 - 1
   gkScaleOffset = chnget:k("scaleOffset") ; 0 - 1
-
+  kCameraDistance = chnget:k("cameraDistance") ; 0 - 1
+  gkCameraDistance = port(kCameraDistance, 0.125)
+  
   // event data
   kHovered = chnget:k("hovered")
   schedkwhen(kHovered, 1, 1, "ducker", 0, 60)

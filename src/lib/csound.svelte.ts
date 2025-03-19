@@ -136,7 +136,10 @@ class SoundAdapter {
     }
 
     async cameraDistanceHandler(value: number) {
-        // value is a number between 0 and 1 (distance from the camera to the origin, 1 is the furthest away)
+        // value is a number between 0 and 1 (distance from the camera
+		// to the origin, 1 is the furthest away)
+		// console.log(value)
+		await this.csound?.setControlChannel('cameraDistance', value);
     }
 
     async cameraRotationHandler(camera: any) {

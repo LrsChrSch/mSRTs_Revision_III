@@ -193,6 +193,10 @@ instr objectSoundSig
   aAmp = line(iAmpStart, p3, iAmpEnd)
   aSig = poscil3(aAmp, aFreq) 
   aSig *= iGain
+
+  // camera distance amplitude mod
+  aSig *= 2 - gkCameraDistance
+  
   // envelope
   iAtt = random:i(2, 4)
   iRel = iAtt
