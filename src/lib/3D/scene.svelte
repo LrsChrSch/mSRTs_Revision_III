@@ -65,8 +65,6 @@
 	let cursorX = $state(0.5);
 	let cursorY = $state(0.5);
 	onMount(async () => {
-		await soundAdapter.prepareSound();
-
 		window.addEventListener('mousemove', (e) => {
 			const mouseX = e.clientX / window.innerWidth;
 			const mouseY = e.clientY / window.innerHeight;

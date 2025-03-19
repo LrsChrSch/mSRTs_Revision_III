@@ -67,11 +67,11 @@ class SoundAdapter {
         // const filePaths = await this.csound?.fs.readdir("/");
         // console.log("Csound File System:", filePaths);
 
-		await this.csound?.setOption("-d");
-	 await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
-		await this.csound?.setOption("-odac");
-		//await this.csound?.setOption("-B512");
-		//await this.csound?.setOption("-b128");
+        await this.csound?.setOption("-d");
+        await this.csound?.setOption("--messagelevel=0"); // this hides all messages from csound
+        await this.csound?.setOption("-odac");
+        //await this.csound?.setOption("-B512");
+        //await this.csound?.setOption("-b128");
         await this.csound?.compileOrc("SR=44100\nksmps=32\n0dbfs=1\nnchnls=2\n" + csd);
     }
 
@@ -88,12 +88,12 @@ class SoundAdapter {
 
     async cursorPosXHandler(value: number) {
         // value is a number between 0 and 1 (left-right screen position)
-        await this.csound?.setControlChannel('cursorPosXHandler', value);
+        this.csound?.setControlChannel('cursorPosXHandler', value);
     }
 
     async cursorPosYHandler(value: number) {
         // value is a number between 0 and 1 (top-bottom screen position)
-        await this.csound?.setControlChannel('cursorPosYHandler', value);
+        this.csound?.setControlChannel('cursorPosYHandler', value);
     }
 
     async transitionStartedInteraction() {
@@ -103,10 +103,10 @@ class SoundAdapter {
         // await this.csound?.evalCode(`
         //   schedule("Flourish", next_time(.25), 0, 0)
         // `)
-		await this.csound?.evalCode(`schedule("objectSoundKill", 0, 1)`);
-        await this.csound?.evalCode(`schedule("transitionSound", 0, 2.75)`);
+        this.csound?.evalCode(`schedule("objectSoundKill", 0, 1)`);
+        this.csound?.evalCode(`schedule("transitionSound", 0, 2.75)`);
     }
-    
+
     async loadSculptureInteraction(value: number) {
         // this function handles both the index (value) (0-319) and the data of the sculpture
         const jsonData = await fetch(`/data/${value}Data.json`).then(async (res) => {
@@ -123,23 +123,23 @@ class SoundAdapter {
         // jsonData.transformMax (object with x, y, z values)
         // jsonData.seed (int)
 
-		// console.log(jsonData.transformMax.x);
-		await this.csound?.setControlChannel('transformMin_x', jsonData.transformMin.x);
-		await this.csound?.setControlChannel('transformMin_y', jsonData.transformMin.y);
-		await this.csound?.setControlChannel('transformMin_z', jsonData.transformMin.z);
-		await this.csound?.setControlChannel('transformMax_x', jsonData.transformMax.x);
-		await this.csound?.setControlChannel('transformMax_y', jsonData.transformMax.y);
-		await this.csound?.setControlChannel('transformMax_z', jsonData.transformMax.z);
-		await this.csound?.setControlChannel('matrixCount', jsonData.matrixCount);
-		await this.csound?.setControlChannel('rotationRange', jsonData.rotationRange);
-		await this.csound?.setControlChannel('scaleOffset', jsonData.scaleOffset);
+        // console.log(jsonData.transformMax.x);
+        this.csound?.setControlChannel('transformMin_x', jsonData.transformMin.x);
+        this.csound?.setControlChannel('transformMin_y', jsonData.transformMin.y);
+        this.csound?.setControlChannel('transformMin_z', jsonData.transformMin.z);
+        this.csound?.setControlChannel('transformMax_x', jsonData.transformMax.x);
+        this.csound?.setControlChannel('transformMax_y', jsonData.transformMax.y);
+        this.csound?.setControlChannel('transformMax_z', jsonData.transformMax.z);
+        this.csound?.setControlChannel('matrixCount', jsonData.matrixCount);
+        this.csound?.setControlChannel('rotationRange', jsonData.rotationRange);
+        this.csound?.setControlChannel('scaleOffset', jsonData.scaleOffset);
     }
 
     async cameraDistanceHandler(value: number) {
         // value is a number between 0 and 1 (distance from the camera
-		// to the origin, 1 is the furthest away)
-		// console.log(value)
-		await this.csound?.setControlChannel('cameraDistance', value);
+        // to the origin, 1 is the furthest away)
+        // console.log(value)
+        this.csound?.setControlChannel('cameraDistance', value);
     }
 
     async cameraRotationHandler(camera: any) {
@@ -151,8 +151,8 @@ class SoundAdapter {
         // worldDirection is the vector of the camera direction
         // starts of as x: 0.666, y: -0.333, z: -0.666 (aiming
         // diagonally down to the origin at the start)
-		await this.csound?.setControlChannel('camera_x', worldDirection.x);
-		await this.csound?.setControlChannel('camera_y', worldDirection.y);
+        this.csound?.setControlChannel('camera_x', worldDirection.x);
+        this.csound?.setControlChannel('camera_y', worldDirection.y);
     }
 
 
@@ -170,7 +170,7 @@ class SoundAdapter {
             hovered = 0;
         }
         // console.log(hovered);
-        await this.csound?.setControlChannel('hovered', hovered);
+        this.csound?.setControlChannel('hovered', hovered);
     }
 
     async globalPositionHandler(x: number, y: number, z: number) {
@@ -195,18 +195,18 @@ class SoundAdapter {
     async sculptureInstanceAmountHandler(value: number) {
         // the value is an integer value around ~200000
         // it gets called every time a sculpture is loaded (approx.
-		// 750ms after an interaction) and reflects the amount of tiny
-		// cubes that are visible
-		// console.log(value);
-		await this.csound?.setControlChannel('numOfCubes', value);
+        // 750ms after an interaction) and reflects the amount of tiny
+        // cubes that are visible
+        // console.log(value);
+        this.csound?.setControlChannel('numOfCubes', value * 8);
     }
-	
-	async transitionFinishedInteraction() {
+
+    async transitionFinishedInteraction() {
         // this gets called when the transition to the next sculpture is finished
         // this also gets called once at the very beginning
-		await this.csound?.evalCode(`schedule("objectSoundTrig", 0, 1)`);
+        this.csound?.evalCode(`schedule("objectSoundTrig", 0, 1)`);
     }
-	
+
     async reachedEndInteraction() {
         // this is called if a user has traveled so far (or had bad luck) that no other image cards are visible and they're effectively stuck in the 3D space
         // the sound could go very crazy or turn off almost completely here.

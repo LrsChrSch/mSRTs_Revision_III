@@ -6,9 +6,15 @@
 	import { Canvas } from '@threlte/core';
 	import Renderer from '$lib/3D/renderer.svelte';
 	import { cubicOut } from 'svelte/easing';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { blur, draw, fade, fly } from 'svelte/transition';
 	import { soundAdapter } from '$lib/csound.svelte';
+
+	let mounted = $state(false);
+	onMount(async () => {
+		await soundAdapter.prepareSound();
+		mounted = true;
+	});
 
 	onDestroy(() => {
 		soundAdapter.disposeSound();
@@ -130,11 +136,13 @@
 
 				{#if !entered}
 					<button
+						disabled={!mounted}
 						out:blur={{
 							duration: 1000,
 							delay: 1250
 						}}
 						onclick={() => {
+							if (!mounted) return;
 							entered = true;
 							soundAdapter.startSound();
 						}}
