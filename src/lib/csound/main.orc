@@ -11,30 +11,10 @@ instr tableData
   // wave forms
   giSine = ftgen(0, 0, 4096, 10, 1)
 
-  // window functions
-  giHanning = ftgen(0, 0, 4096, 20, 2)
-
   // transfer functions 
   giSoftTanh = ftgen(0, 0, 4096, "tanh", -1, 1, 0)
   giMidTanh = ftgen(0, 0, 4096, "tanh", -10, 10, 0)
   giHeavyTanh = ftgen(0, 0, 4096, "tanh", -100, 100, 0)
-  
-  // phase dist ft
-  giPhsFtArr[] init 8
-  giPhsFtArr[0] = ftgen(0, 0, 4096, 7, 0, 4096, 1)
-  giPhsFtArr[1] = ftgen(0, 0, 4096, 8, 0, 4096, 1)
-  giPhsFtArr[2] = ftgen(0, 0, 4096, 8, 0, 2048, 0.25, 2048, 1)
-  giPhsFtArr[3] = ftgen(0, 0, 4096, 8, 0, 2048, 0.75, 2048, 1)
-  giPhsFtArr[4] = ftgen(0, 0, 4096, 8, 0, 1024, 0.25, 1024, 0.75,
-	2048, 1)
-  giPhsFtArr[5] = ftgen(0, 0, 4096, 8, 0, 1024, 0.5, 1024, 0.75, 2048,
-	1)
-  giPhsFtArr[6] = ftgen(0, 0, 4096, 8, 0, 1024, 0.25, 1024, 0.3, 1024,
-	0.75, 1024, 1)
-  giPhsFtArr[7] = ftgen(0, 0, 4096, 8, 0, 1024, 0.5, 1024, 0.6, 1024,
-	0.75, 1024, 1)
-  giPhsFtArr[7] = ftgen(0, 0, 4096, 8, 0, 1024, 0.75, 1024, 0.3, 1024,
-	0.75, 1024, 1)
 endin
 schedule("tableData", 0, giGlobalTime)
 

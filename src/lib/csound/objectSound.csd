@@ -133,7 +133,7 @@ instr objectSoundTrig
   iChooseEffectSend = iEffectSendArr[iEffectCnt]
   
   // call synth
-  iGain = db(-24)
+  iGain = db(-28)
   iCnt init 0
   while (iCnt < iNumOfNotes) do
 	schedule("objectSoundSig", 0, 60, iNoteSelection1[iCnt], \
@@ -145,37 +145,6 @@ instr objectSoundTrig
   giObjectCount += 1
   turnoff 
 endin
-
-;; instr envelope_generator
-;;   kTrig = changed(gkCameraX)
-;;   schedkwhen(kTrig, 0, 1, "envelope_generator_env", 0, .1)
-;; endin
-
-;; gaEnvelopeGen init 0
-;; instr envelope_generator_env ;; amount of percussivness in sound
-;;   // object data
-;;   iRotation = i(gkRotationRange)
-;;   iScale = i(gkScaleOffset)
-
-;;   // envelope data
-;;   iMaxDur = 2
-;;   iMinDur = 0.1 
-;;   iDur = linear_scaling(iScale, 0, 1, iMinDur, iMaxDur)
-;;   iDur *= random:i(0.75, 1.25)
-;;   p3 = iDur
-
-
-;;   iStartEndVol = 0
-;;   iAtt = linear_scaling(iScale, 0, 1, iDur * 0.05, iDur * 0.1)
-;;   iDec = linear_scaling(iScale, 0, 1, iDur * 0.1, iDur * 0.2)
-;;   iRel = linear_scaling(iScale, 0, 1, iDur * 0.15, iDur * 0.25)
-;;   iSusTime = iDur - (iAtt + iDec + iRel)
-;;   iSusLvl = linear_scaling(iRotation, 0, 1, 0.25, 1)
-  
-;;   gaEnvelopeGen = linsegr(iStartEndVol, iAtt, 1, iDec, iSusLvl,
-;; 	iSusTime, iSusLvl, iRel, iStartEndVol)
-;; endin
-
 
 instr objectSoundSig
   // p-field data
@@ -194,8 +163,11 @@ instr objectSoundSig
   aSig = poscil3(aAmp, aFreq) 
   aSig *= iGain
 
-  // camera distance amplitude mod
-  aSig *= 2 - gkCameraDistance
+  // camera distance mod
+  aSig *= 2 - gkCameraDistance ;; amplitude mod
+
+  kCf = 17000 - (gkCameraDistance * 10000)
+  aSig = butterlp(aSig, kCf)
   
   // envelope
   iAtt = random:i(2, 4)
