@@ -133,7 +133,7 @@ instr objectSoundTrig
   iChooseEffectSend = iEffectSendArr[iEffectCnt]
   
   // call synth
-  iGain = db(-28)
+  iGain = db(-36)
   iCnt init 0
   while (iCnt < iNumOfNotes) do
 	schedule("objectSoundSig", 0, 60, iNoteSelection1[iCnt], \
@@ -164,13 +164,18 @@ instr objectSoundSig
   aSig *= iGain
 
   // camera distance mod
-  aSig *= 2 - gkCameraDistance ;; amplitude mod
+  aSig *= 2 - gkCameraDistance ; amplitude mod
 
-  kCf = 17000 - (gkCameraDistance * 10000)
-  aSig = butterlp(aSig, kCf)
+  kCf = 17000 - (gkCameraDistance * 10500)
+  aSig = butterlp(aSig, kCf) ; filter mod
+
+  kDistanceRev = 1.7 - gkCameraDistance
+  gaReverbBus[0] = (kDistanceRev * aSig) + gaReverbBus[0]
+  gaReverbBus[1] = (kDistanceRev * aSig) + gaReverbBus[1]
+
   
   // envelope
-  iAtt = random:i(2, 4)
+  iAtt = random:i(1, 2)
   iRel = iAtt
   iSusTime = p3 - (iAtt + iRel)
   aEnv linsegr 0, iAtt, 1, iSusTime, 1, iRel, 0
