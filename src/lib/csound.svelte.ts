@@ -156,9 +156,10 @@ class SoundAdapter {
     }
 
 
-    async surroundingHoverInteraction(value: number) {
+    async surroundingHoverInteraction(value: number, index: number) {
         // this function gets called when the user hovers over one of the image cards around the origin
-        // index is the sculpture index (0-319). Index is -1 if nothing is hovered
+        // value is the sculpture index (0-319). Index is -1 if nothing is hovered
+        // index is the animationIndex (cards at the top have a lower index and then it winds down towards the bottom)
 
         // console.log(value)
         // just in case you need a boolean value for the hovered state
