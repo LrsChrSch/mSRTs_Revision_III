@@ -46,7 +46,7 @@ class SoundAdapter {
 
         this.csound = await Csound({ useWorker: true, }); // useWorker, so it runs in a separate thread, inputChannelCount: 0, so it doesn't expect any input
 
-        //       this.csound?.removeAllListeners("message"); // comment this out if you want to see the console messages from Csound
+               this.csound?.removeAllListeners("message"); // comment this out if you want to see the console messages from Csound
 
         // console.log(csound)
 
@@ -72,7 +72,7 @@ class SoundAdapter {
         await this.csound?.setOption("-odac");
         //await this.csound?.setOption("-B512");
         //await this.csound?.setOption("-b128");
-        await this.csound?.compileOrc("SR=44100\nksmps=32\n0dbfs=1\nnchnls=2\n" + csd);
+        await this.csound?.compileOrc("SR=44100\nksmps=128\n0dbfs=1\nnchnls=2\n" + csd);
     }
 
     async startSound() {

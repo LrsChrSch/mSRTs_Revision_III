@@ -25,7 +25,7 @@ instr getDataFromBrowser
   kCursorPosXHandler = chnget:k("cursorPosXHandler")
 
   
-  kCursorAcceleration = changek((kCursorPosYHandler + kCursorPosXHandler)  / 1.5)
+  kCursorAcceleration = changek((kCursorPosYHandler + kCursorPosXHandler)  / 2)
   gkCursorAcceleration = port(kCursorAcceleration, 0.25)
   gkSubBeatings = port(kCursorPosXHandler, 0.25)
   gkCameraX = chnget:k("camera_x")
@@ -43,7 +43,7 @@ instr getDataFromBrowser
   gkRotationRange = chnget:k("rotationRange") ; 0 - 1
   gkScaleOffset = chnget:k("scaleOffset") ; 0 - 1
   kCameraDistance = chnget:k("cameraDistance") ; ~0.6 - ~1.7
-  gkCameraDistance = port(kCameraDistance, 0.125)
+  gkCameraDistance = port(kCameraDistance, 0.25)
   
   // event data
   kHovered = chnget:k("hovered")
