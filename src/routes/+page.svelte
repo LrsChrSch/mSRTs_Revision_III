@@ -24,6 +24,8 @@
 
 	let imgHeight = $state(0);
 	let needsReset = $state(false);
+
+	let screenSize = $state(0);
 </script>
 
 <svelte:head>
@@ -33,6 +35,8 @@
 		content="What is language? What are symbols? What is the meaning of meaning? If language shapes thought, to what extent does it limit our ability to perceive reality? And in a reality of misinformation, infinite viewpoints and computers being capable of rendering imposing high fidelity graphics anywhere, do our simple abstracted symbols even matter? Aren't we ultimately held back by the minimalist character of our 2D alphabetic characters? This project allows the exploration of a virtual space trying to answer these questions. Moving through the space from point to point reveals various viewpoints from science, philosophy, fiction and art. Shifting from meaning to intuition. From reading to observing. From the known to the unknown."
 	/>
 </svelte:head>
+
+<svelte:body bind:clientWidth={screenSize} />
 
 <section
 	class="pointer-events-none absolute inset-0 z-50 {entered
@@ -110,13 +114,14 @@
 		</nav>
 		<div class="flex-1 flex items-start md:justify-center md:items-center z-20">
 			<div
-				class="grid md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-[repeat(13,_minmax(0,_1fr))] overflow-y-scroll max-h-[calc(100vh-7rem)] md:max-h-[calc(100vh-8rem)]"
+				class="grid md:grid-cols-7 grid-rows-[2rem_1fr_auto] md:grid-rows-1 lg:grid-cols-9 xl:grid-cols-[repeat(13,_minmax(0,_1fr))] overflow-y-auto max-h-[calc(100vh-7rem)] md:max-h-[calc(100vh-8rem)]"
 			>
 				<div class="col-span-2 lg:col-start-2 xl:col-start-4">
 					{#if !entered}
 						<h1
 							out:fly={{
-								x: '100%',
+								x: screenSize >= 768 ? '100%' : '0',
+								y: screenSize >= 768 ? '0' : '100%',
 								duration: 1500,
 								delay: 300,
 								easing: cubicOut
@@ -146,16 +151,17 @@
 							entered = true;
 							soundAdapter.startSound();
 						}}
-						class="col-span-3 lg:col-start-4 xl:col-start-6 flex flex-col items-center py-4 md:p-4 z-10 pointer-events-auto focus:!ring-0 {entered
+						class="col-span-2 md:col-span-3 lg:col-start-4 xl:col-start-6 flex flex-col items-center py-4 md:p-4 z-10 pointer-events-auto focus:!ring-0 {entered
 							? 'bg-transparent'
 							: 'bg-zinc-950'} transition-colors duration-500 group"
 					>
 						<div
-							class="border-neutral-700 border overflow-clip w-full aspect-square md:aspect-[4/5] h-auto relative group-focus:ring-1"
+							class="border-neutral-700 border overflow-clip w-full aspect-square sm:aspect-video md:aspect-[4/5] h-auto relative group-focus:ring-1"
 						>
 							<img
 								src="/vid.webp"
-								class="blur-xs w-[512px] h-full object-cover group-hover:scale-110 transition-transform duration-500 mix-blend-screen contrast-[120%]"
+								class="blur-xs h-full object-cover group-hover:scale-110 transition-transform duration-500 mix-blend-screen contrast-[120%]"
+								style={'width:' + screenSize + 'px'}
 								alt="preview"
 								loading="lazy"
 								bind:clientHeight={imgHeight}
@@ -189,11 +195,10 @@
 							click to enter
 						</p>
 					</button>
-				{/if}
-				{#if !entered}
 					<div
 						out:fly={{
-							x: '-100%',
+							x: screenSize >= 768 ? '-100%' : '0',
+							y: screenSize >= 768 ? '0' : '-100%',
 							duration: 1000,
 							easing: cubicOut
 						}}
