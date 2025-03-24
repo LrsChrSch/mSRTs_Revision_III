@@ -164,12 +164,12 @@ instr objectSoundSig
   aSig *= iGain
 
   // camera distance mod
-  aSig *= 2 - gkCameraDistance ; amplitude mod
+  aSig *= 1 - db(gkCameraDb) ; amplitude mod
   ;; filter mod
   kCf = 17000 - (gkCameraDistance * 10500)
   aSig = butterlp(aSig, kCf) 
   ;; reverb send mod 
-  kDistanceRev = 1.7 - gkCameraDistance 
+  kDistanceRev = 1 - db(gkCameraDb)
   gaReverbBus[0] = (kDistanceRev * aSig) + gaReverbBus[0]
   gaReverbBus[1] = (kDistanceRev * aSig) + gaReverbBus[1]
 

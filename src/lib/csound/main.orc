@@ -10,7 +10,8 @@ gaResonatorBus[] init 2
 instr tableData
   // wave forms
   giSine = ftgen(0, 0, 4096, 10, 1)
-
+  // db table
+  giDb = ftgen(0, 0, 4096, -7, -90, 4096, 3)
   // transfer functions 
   giSoftTanh = ftgen(0, 0, 4096, "tanh", -1, 1, 0)
   giMidTanh = ftgen(0, 0, 4096, "tanh", -10, 10, 0)
@@ -44,6 +45,7 @@ instr getDataFromBrowser
   gkScaleOffset = chnget:k("scaleOffset") ; 0 - 1
   kCameraDistance = chnget:k("cameraDistance") ; ~0.6 - ~1.7
   gkCameraDistance = port(kCameraDistance, 0.25)
+  gkCameraDb = tablei(kCameraDistance - 0.6, giDb, 1)
   
   // event data
   kHovered = chnget:k("hovered")
