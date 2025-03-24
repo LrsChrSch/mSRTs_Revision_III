@@ -163,6 +163,12 @@ instr objectSoundSig
   aSig = poscil3(aAmp, aFreq) 
   aSig *= iGain
 
+
+
+  // ducking
+  aSig *= gkDuckEnv
+  
+  
   // camera distance mod
   aSig *= 1 - db(gkCameraDb) ; amplitude mod
   ;; filter mod
@@ -173,7 +179,6 @@ instr objectSoundSig
   gaReverbBus[0] = (kDistanceRev * aSig) + gaReverbBus[0]
   gaReverbBus[1] = (kDistanceRev * aSig) + gaReverbBus[1]
 
-  
   // envelope
   iAtt = random:i(1, 2)
   iRel = iAtt

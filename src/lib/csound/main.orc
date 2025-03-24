@@ -48,6 +48,7 @@ instr getDataFromBrowser
   gkCameraDb = tablei(kCameraDistance - 0.6, giDb, 1)
   
   // event data
+  gkHoveredIndex = chnget:k("hoveredIndex")
   kHovered = chnget:k("hovered")
   schedkwhen(kHovered, 1, 1, "ducker", 0, 60)
   schedkwhen(kHovered, 1, 1, "hoveredSound", 0, 60)
@@ -73,9 +74,8 @@ schedule("main", 0, 1)
 #include "./hoveredSound.csd"
 #include "./transitionSound.csd"
 #include "./objectSound.csd"
+
 instr cursorSound
-
-
   iAmp = db(-6)
   iBaseFreq = giRoot * 2
   kEnvFreq = randomi(1, 8, 1)

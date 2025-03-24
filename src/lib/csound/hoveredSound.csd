@@ -2,7 +2,7 @@ instr hoveredSound
   // set data
   iStructure1[] fillarray 4, 3, 4
   iStructure2[] fillarray 3, 4, 5
-  iScaleDivision1 = 12
+  iScaleDivision1 = 5 + i(gkHoveredIndex)
   iScaleDivision2 = iScaleDivision1 
   iRoot = giRoot * 16
   iOctDown = 0
@@ -17,7 +17,7 @@ instr hoveredSound
   // call synth
   iCnt init 0
   while (iCnt < iNumOfNotes) do
-	schedule("hoveredSoundSig", 0, p3, (db(-35) / iNumOfNotes / 2), 
+	schedule("hoveredSoundSig", 0, p3, (db(-24) / iNumOfNotes / 2), 
     iNoteSelection1[iCnt], iNoteSelection2[iCnt])  
 	iCnt += 1
   od

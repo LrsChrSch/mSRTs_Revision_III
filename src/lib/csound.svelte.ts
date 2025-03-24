@@ -72,7 +72,7 @@ class SoundAdapter {
         await this.csound?.setOption("-odac");
         //await this.csound?.setOption("-B512");
         //await this.csound?.setOption("-b128");
-        await this.csound?.compileOrc("SR=44100\nksmps=128\n0dbfs=1\nnchnls=2\n" + csd);
+        await this.csound?.compileOrc("SR=44100\nksmps=32\n0dbfs=1\nnchnls=2\n" + csd);
     }
 
     async startSound() {
@@ -172,6 +172,7 @@ class SoundAdapter {
         }
         // console.log(hovered);
         this.csound?.setControlChannel('hovered', hovered);
+		this.csound?.setControlChannel('hoveredIndex', index);
     }
 
     async globalPositionHandler(x: number, y: number, z: number) {

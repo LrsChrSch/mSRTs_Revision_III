@@ -29,8 +29,8 @@ instr additivStruct
 endin
 
 instr ducker
-  iDuckGain = db(-3.5)
-  gkDuckEnv = linsegr(1, 3, iDuckGain, p3-6, iDuckGain, 3, 1)
+  iDuckGain = db(-12)
+  gkDuckEnv = linsegr(1, 1.5, iDuckGain, p3-3, iDuckGain, 1.5, 1)
 endin
 
 instr additivStructSig
