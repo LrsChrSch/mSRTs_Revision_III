@@ -1,103 +1,37 @@
-# Unbetiteltes Projekt
+# m.SRT.s Revision III
 
-## TODO:
-- Sound (Beide)
-- Texte überarbeiten (Lars)
-- Meta Description, etc. (Lars)
+This repository contains the code for the web version of "m.SRT.s Revision III".
+It contains the svelte website and csound code for viewing the contents that have been developed/collected for this project.
+It does not contain some of the python optimization scripts and the VVVV patch for creating the shapes, images and texts.
 
-### Ars Electronica Einreichung
-Es geht hierbei um den Prix Ars Electronica 2025 in der Kategorie New Animation Art oder Digital Musics / Sound Art
-- Kategorie (würde ich bei New Animation Art belassen)
-- Title: m-SRT-s Revision III
-- Description (Text)
-	- What is language? What are symbols? What is the meaning of meaning? If language shapes thought, to what extent does it limit our ability to perceive reality? And in a reality of misinformation, infinite viewpoints and computers being capable of rendering imposing high fidelity graphics anywhere, do our simple abstracted symbols even matter? Aren't we ultimately held back by the minimalist character of our 2D alphabetic characters?
-
-"m-SRT-s Revision III" allows the exploration of a virtual space trying to answer these questions. Moving through the space from point to point reveals various viewpoints from science, philosophy, fiction and art. Shifting from meaning to intuition. From reading to observing. From the known to the unknown.
-
-The main focus is a complex morphing 3D shape serving as a placeholder for the aforementioned philosophical ideas and questions and reflecting the fluid hyper-dimensional properties of meaning that's mainly explored by modern machine learning applications. This symbol, placed in a virtual environment, connects both the known space of reality that we navigate daily and the unknown array of (in)finite possibilities that we are yet to understand. Accompanying these visual elements is a fully live-synthesized soundscape, reacting to the shifting parameters of the visualization, pulling viewers into a flow of sound and visuals, heightening focus and immersion.
-
-This project was realized using VVVV (visuals) and Csound (soundscape). The visuals were also ported to a SvelteKit+ThreeJS version for the web.
-- Type of the project: Installation
-- Year the project was created 2025
-- URL
-- Credits: -
-- Support Received from: Prof. Kathi Kaeppel, VVVV community, Csound Community
-- Keywords
-- Use of AI (only in the web version):
-	- Verteilung der Texte mit Hilfe von Embeddings (all-MiniLM-L6-v2)
-	- GitHub Copilot Hilfe beim fixen/erklären von Bugs im Code
-- Software
-	- VVVV (using various packages such as Stride and Fuse)
-	- Csound
-	- Svelte / Sveltekit
-	- ThreeJS / Threlte
-- Hardware
-	- (web version):
-		- Any PC or Smartphone will work
-	- (installation):
-		- A windows PC or Laptop with a somewhat decent graphics card (GTX 1080 and upwards works perfectly fine)
-		- Some form of display surface (either a large screen or projection)
-- Submit to other prizes
-	- S+T+ARTS Prize
-- Artists
-	- Philipp von Neumann
-	- Lars Christian Schmidt
-- Uploads
-	- Bilder/Videos/Sounds
-
-
-## Parameterliste
-
-### Formen
-- Matrix Count (3-5): Dieser Parameter beschreibt die Grundform des Fraktals (3 sind immer pyramiden-artige Formen, ab 4 ist die Grundform nicht mehr wirklich erkennbar). Grundsätzlich bedeuten höhere Werte hier, dass die Form 'aufgefächerter'/'ungenauer'/'variabler' ist
-- Scale (0-1): Je höher Scale ist, desto 'geometrischer' werden die Formen in der Regel. Die Punkte schwirren weniger im Raum rum und bilden präzisere Formen
-- Rotation (0-1): Dieser Wert ist am schwierigsten zu erklären. Rotation hat aber trotzdem einen großen Effekt auf die Form. Sehr kleine Werte lassen die Form "aufgebauscht" und "wolkenartig" erscheinen. Sonst sind (meiner Meinung nach) nicht sehr viele Eigenschaften klar benennbar. Es kommt hier halt sehr auf die anderen Werte an.
-
-Grundsätzlich sind diese Werte eher Richtwerte. Die Formen sind sehr zufällig generiert und können immer auch abweichen.
-
-### Szene
-- Kameraposition relativ zum Mittelpunkt (Orbit von 10 Einheiten auf jeder Achse): -10 bis +10
-- Kamerarotation als Winkel auf 2 Achsen (Pitch und Yaw)
-	- K.A. ob man das benutzen kann. Vllt für räumlichen Sound
-- Distanz zum Mittelpunkt (abgeleitet aus der Kameraposition): 0-10
-- Welche jetzige Form gerade im Mittelpunkt ist (am ehesten in Verbindung mit den Werten oben): Index 0-319, also 320 Formen insgesamt
-- Welche Formen gerade außen herum sind als Bilder (Liste aus Indexen 0-319)
-- 2D Mausposition (entweder als Pixel oder besser als UV-Koordinaten): -1 bis +1 oder 0 bis 1 für X und Y Achse
-- Ob und welche Form gerade mit der Maus gehovered wird: Boolean und/oder Index
-- Generelle Position im großen Raum. Kurze Erkärung dazu: man bewegt sich zwar nur um den Mittelpunkt, aber der Mittelpunkt bewegt sich über Zeit im großen Raum. Ich hatte geplant, dass je weiter raus man geht, desto weniger Bilder/Texte kommen noch und man landet irgendwann einfach im "Void", außerhalb von allem.
-Dieser Punkt sollte so nach ca. 100 Einheiten in jede Richtung kommen (also bei 100 sind noch alle Bilder da, aber zwischen 100-200 sollen es immer weniger werden, bis dann irgendwann (quasi zufällig) der Punkt kommt, wo man halt nicht mehr zurück kann)
-Da bin ich mir aber auch noch nicht ganz sicher, ob das dramaturgisch funktioniert. Ich glaube aber schon.
-Deswegen: Position im Raum (-200 bis 200 für 3 Achsen) und vllt. auch ein Wert, der angibt, wie viel noch übrig ist (linear interpolierte Range von 0-100-200 zu 1-1-0)
-- Die Generelle Position beschreibt gleichzeitig auch die Entfernung auf den Achsen:
-	- Signal/Noise (links/rechts): normalisiert -1 bis +1
-	- Meta/Infra (oben/unten): normalisiert -1 bis +1
-	- Emergent/Constructed (hinten/vorne): normalisiert -1 bis +1
-- Übergang des Mittelpunkts:
-	- Ob der Übergang gestartet wurde: Trigger
-	- Ob der Übergang beendet wurde: Trigger
-	- Wie weit der Übergang fortgeschritten ist: Nummer 0-1, wird animiert innerhalb der paar Sekunden
-- Übergang der Elemente (Bild+Text) außen:
-	- Jedes Element hat eine eigene Animation und verschwindet mit leichtem Delay von oben nach unten. D.h. alle Übergangsparameter (Trigger+Fortschritt) gibt es auch für einzelne Bilder
-	- Texte haben jetzt gerade keinen hover/click-Effekt, könnte man aber auch wieder einbauen
-Der gesamte Übergang aller Elemente beim Klick dauert ca. 3-3.5 Sekunden und folgt weitestgehend einer cubic-in-out-Kurve
-- Interactions Counter: Wie oft man schon die Position gewechselt hat (wie viele Klicks auf Bilder gegangen sind). Je mehr Klicks, desto mehr Bilder und weniger Text gibt es in der Szene. Das ganze bei 20 Interaktionen geclamped (kann man noch ändern): Deswegen 0-20 oder normalisiert 0-1 (Fortschritt durch die Website im Prinzip)
-	- Damit verbunden ist die weiße Linie, die man hinter sich herzieht. Diese hat eine Liste mit mehreren Positionen (jeweils x,y,z in globalen Koordinaten -200 bis +200) und natürlich eine Listenlänge (0-unendlich theoretisch)
-- Theoretisch gibt's noch mehr Parameter wie die Anzahl an Instanzen, aus der eine Form besteht (immer ca. 200.000) oder wo der durschnittliche Punkt einer Form ist (normalisiert -1 bis +1)
-- Konstant: Die Szene hat auch noch ein visuelles Post-Processing-Rauschen. Das verändert sich nicht, könnte aber auch im Sound enthalten sein.
-- Konstant: Nach ca. 15 Einheiten verdeckt außerdem Nebel die Szene. Das hat keine Auswirkung auf die Bilder/Texte/Formen, aber die Linien verschwinden bspw. darin
-
-Es lassen sich auch Geschwindigkeiten ableiten (bspw. für die Kameraposition oder den Mittelpunkt). Ist noch nicht im Programm drin, aber die sollten dann in Einheiten/Frame oder Einheiten/Sekunde angegeben sein.
-Eine Einheit würde ich am ehesten mit einem Meter gleichsetzen (ist aber auch nicht so wichtig)
-
-### Startbildschirm
-- Den Button in der Mitte zum Entern: Trigger (mit anschließender Animation über 2.5 Sekunden)
+[mSRTs Revision III](https://msrts.lrs-chr-sch.de/) © 2025 by [Lars Christian Schmidt](https://lrs-chr-sch.de/) and [Philipp von Neumann](https://www.von-neumann.com/) is licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 
 
 
+## Description
+
+What is language? What are symbols? What is the meaning of meaning? If language shapes thought, to what
+extent does it limit our ability to perceive reality? And in a reality of misinformation, infinite viewpoints and computers
+being capable of rendering imposing high fidelity graphics anywhere, do our simple abstracted symbols even
+matter? Aren't we ultimately held back by the minimalist character of our 2D alphabetic characters? "m-SRT-s
+Revision III" allows the exploration of a virtual space trying to answer these questions. Moving through the space
+from point to point reveals various viewpoints from science, philosophy, fiction and art. Shifting from meaning to
+intuition. From reading to observing. From the known to the unknown. 
+
+The main focus is a complex morphing 3D shape serving as a placeholder for the
+aforementioned philosophical ideas and questions and reflecting the fluid hyper-dimensional properties of meaning
+that's mainly explored by modern machine learning applications. This generative symbol, placed in a virtual
+environment, connects both the known space of reality that we navigate daily and the unknown array of (in)finite
+possibilities that we are yet to understand. Various texts, quotes, thoughts and questions serve as hints and
+suggestions about the context of this project. The texts were manually sourced from a broad range of scientific and
+literary sources including neuroscience, linguistics, humanities, philosophy, etc. Accompanying these visual
+elements is a fully live-synthesized soundscape made by Philipp von Neumann, reacting to the shifting parameters
+of the visualization, pulling viewers into a flow of sound and visuals, heightening focus and immersion. This
+interdisciplinary project was realized using VVVV and Csound.
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've cloned this project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
 npm run dev
@@ -108,12 +42,10 @@ npm run dev -- --open
 
 ## Building
 
-To create a production version of your app:
+To create a production version of this website:
 
 ```bash
 npm run build
 ```
 
 You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
