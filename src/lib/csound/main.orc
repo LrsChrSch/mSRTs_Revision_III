@@ -206,6 +206,10 @@ instr masterBus
   aLimited1 = limit(aCmpOut1, -1, 1)
   aLimited2 = limit(aCmpOut2, -1, 1)
 
+  // master volume
+  aLimited1 *= db(-6)
+  aLimited2 *= db(-6)
+  
   // output
   outs(aLimited1, aLimited2)
 endin
